@@ -23,7 +23,7 @@ const UpdateCustomerDrawer: React.FC<{ cId: number, name: string,address:string,
                 showNotification(
                     "success",
                     "සාර්ථක පණිවිඩය",
-                    "සාර්ථක යාවත්කාලීන කරනු ලදි!!"
+                    "සාර්ථක යාවත්කාලීන කරනු ලදි!"
                 );
                 props.fetchFunc();
             }
@@ -46,7 +46,7 @@ const UpdateCustomerDrawer: React.FC<{ cId: number, name: string,address:string,
             showNotification(
                 "error",
                 "දෝශ පණිවිඩය",
-                error.response?.data?.message || "පද්දතියේ දෝශයක් ඇත!"
+                error.response?.data?.message || "පද්ධතියේ දෝශයක් ඇත!"
             );
         }
         form.resetFields();

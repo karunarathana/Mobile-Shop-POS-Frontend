@@ -6,6 +6,7 @@ import ConfirmDelete from '../components/Confirmation';
 import axios from 'axios';
 import { showNotification } from '../components/Notification';
 import API_ENDPOINTS from '../../../constant/backend-endpoints';
+import { deleteCategory } from '../../../service/CreateCategory.service';
 
 interface DataType {
     categoryId: number;
@@ -41,7 +42,7 @@ const CategoryTable: React.FC<CustomerTableProps> = ({
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <UpdateCategoryDrawer categoryName={record.name} categoryId={record.categoryId} />
+                    <UpdateCategoryDrawer categoryName={record.name} categoryId={record.categoryId} reloadTable={backendApi} />
 
                     <ConfirmDelete
                         onConfirm={() => handleDelete(record.categoryId, backendApi)}
@@ -61,42 +62,28 @@ async function handleDelete(key: number, backFunc: () => void) {
     console.log(key);
 
     try {
-        const response = await axios.delete(
-            API_ENDPOINTS.DELTE_CATEGORY,
-            {
-                params: {
-                    categoryId: key,
-                },
-            }
-        );
-        console.log("**********************************")
-        console.log("API Call Started In Category handleDelete");
-        console.log("**********************************")
-        console.log("API Response:", response);
-        console.log("API Call Finished In Category handleDelete");
-        console.log("**********************************")
-
+        const response = await deleteCategory(key);
         if (response.data.msg === "Category Deleted Successfully" && response.data.statusCode === "201") {
             showNotification(
                 "success",
                 "Success",
-                "Category delete successfully!"
+                "කාණ්ඩය සාර්ථක ඉවත්කරන ලදි!"
             );
             backFunc();
         }
         if (response.data.statusCode === "500") {
-           showNotification(
+            showNotification(
                 "warning",
-                "System Warning",
-                "Cannot delete category. Products exist. Please go to the Product table and delete refrence this category."
+                "පද්ධති අනතුරු ඇගවීමේ පණිවිඩය",
+                "ඔබ දැනටමත් මෙම කාණ්ඩය භාණ්ඩයක් සදහා භාවිතා කර ඇත්නම් පළමුව එය පද්ධතියෙන් ඉවත්කර කාණ්ඩය ඉවත්කරන කරන්න"
             );
         }
     } catch (error: any) {
         console.error("API Error:", error);
         showNotification(
             "error",
-            "Server Error",
-            error.response?.data?.message || "Something went wrong!"
+            "දෝශ පණිවිඩය",
+            error.response?.data?.message || "පද්දතියේ දෝශයක් ඇත!"
         );
     }
 }
