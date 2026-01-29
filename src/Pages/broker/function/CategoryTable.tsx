@@ -63,7 +63,7 @@ async function handleDelete(key: number, backFunc: () => void) {
 
     try {
         const response = await deleteCategory(key);
-        if (response.data.msg === "Category Deleted Successfully" && response.data.statusCode === "201") {
+        if (response.data.msg === "Category Deleted Successfully" && response.data.statusCode === "201 CREATED") {
             showNotification(
                 "success",
                 "Success",
