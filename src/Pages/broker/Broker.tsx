@@ -16,6 +16,7 @@ import order from "./../../assets/Dashboard/order.png"
 import bill from "./../../assets/Dashboard/bill.png"
 import MainDashBoard from './views/MainDashBoard';
 import ManageOrder from './components/ManageOrder';
+import ReloadDashboard from './views/ReloadDashBoar';
 
 
 export default function Broker() {
@@ -23,7 +24,7 @@ export default function Broker() {
     const page = () => {
         switch (redirectPage) {
             case "mainBoard":
-                return<MainDashBoard/>
+                return <MainDashBoard />
             case "dashBoard":
                 return <DashBoard />;
             case "place":
@@ -33,9 +34,11 @@ export default function Broker() {
             case "category":
                 return <Category />;
             case "order":
-                return <ManageOrder/>;
+                return <ManageOrder />;
             case "profile":
                 return <Bprofile />;
+            case "reload":
+                return <ReloadDashboard />;
             case "product":
                 return <ManageProduct />;
         }
@@ -54,7 +57,7 @@ export default function Broker() {
                                 <img className='flex justify-center w-[30px]' src={dash} alt="" />
                                 <p className='hidden md:flex text-[1.1rem] text-white font-semibold'>Dashboard</p>
                             </div>
-                             <div onClick={() => { setRedirectPage("dashBoard") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
+                            <div onClick={() => { setRedirectPage("dashBoard") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
                                 <img className='w-[30px]' src={bill} alt="" />
                                 <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Place Order</p>
                             </div>
@@ -74,6 +77,10 @@ export default function Broker() {
                                 <img className='w-[30px]' src={mproduct} alt="" />
                                 <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Manage Product</p>
                             </div>
+                            <div onClick={() => { setRedirectPage("reload") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
+                                <img className='w-[30px]' src={account} alt="" />
+                                <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Reload</p>
+                            </div>
                             <div onClick={() => { setRedirectPage("profile") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
                                 <img className='w-[30px]' src={account} alt="" />
                                 <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Account</p>
@@ -81,7 +88,7 @@ export default function Broker() {
 
                         </div>
                         <div className='text-center'>
-                            <img className='w-[100px] mx-auto' src={logo} alt="" />
+                            {/* <img className='w-[100px] mx-auto' src={logo} alt="" /> */}
                             <p className='text-gray-400'>Made In NSK Technology</p>
                         </div>
                     </div>

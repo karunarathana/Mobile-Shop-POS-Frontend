@@ -71,7 +71,7 @@ export default function ManageProduct() {
   return (
     <div className="p-[10px]">
       <ToastContainer />
-      <h2 className="text-2xl font-bold mb-4">Manage Product</h2>
+      <h2 className="text-2xl font-bold mb-4">උපාංග (Product) කළමණාකරන පිටුව</h2>
       <div>
         <div>
           <Box sx={{
@@ -87,7 +87,7 @@ export default function ManageProduct() {
                   name="search"
                 >
                   <Search
-                    placeholder="input phone number text"
+                    placeholder="ගණුදෙනුකරුගේ දුරකතන අංකය සදහන් කරන්න."
                     allowClear
                     enterButton="Search"
                     size="large"

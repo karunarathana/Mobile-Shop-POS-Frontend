@@ -71,7 +71,7 @@ function Category() {
                                     name="search"
                                 >
                                     <Search
-                                        placeholder="input phone number text"
+                                        placeholder="කාණ්ඩනාමය ඇතුලත් කරන්න."
                                         allowClear
                                         enterButton="Search"
                                         size="large"
