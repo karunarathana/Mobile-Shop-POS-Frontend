@@ -3,123 +3,168 @@ import { Table, Space, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import ConfirmDelete from '../components/Confirmation';
 import UpdateProductDrawer from '../subviews/UpdateProductDrawer';
-
-interface categoryType {
-    categoryId: number;
-    name: string;
-}
-
-interface DataType {
-    foodID: number;
-    foodName: string;
-    foodPrice: number;
-    phoneNumber: string;
-    status: string;
-    createdAt: string;
-    size: string;
-    updatedBy: string;
-    categoryId: categoryType;
-}
+import { ProductType } from '../../../model/BaseCreateProduct';
+import { deleteProduct } from '../../../service/ManageProduct.service';
+import { showNotification } from '../components/Notification';
 
 interface CustomerTableProps {
-    tableData: DataType[];
+    tableData: ProductType[];
     loadingData: boolean;
+    refreshTable: () => void
 }
-function handleDelete(key: number) {
-    console.log(key);
+
+async function handleDelete(key: number, refreshTable: () => void) {
+    console.log("ProductID " + key);
+    try {
+        const response = await deleteProduct(key);
+        if (response.data.msg === "Product Delete Successfully") {
+            showNotification(
+                "success",
+                "සාර්ථක පණිවිඩය",
+                "උපාංගය සාර්ථක මකා දමනු ලදි!"
+            );
+            refreshTable();
+        }
+    } catch (error: any) {
+        console.error("API Error:", error);
+        showNotification(
+            "error",
+            "දෝශ පණිවිඩය",
+            error.response?.data?.message || "පද්ධතියේ දෝශයක් ඇත!"
+        );
+    }
 }
 
 const ProductTable: React.FC<CustomerTableProps> = ({
     tableData,
     loadingData,
+    refreshTable
 }) => {
 
-    const columns: TableProps<DataType>['columns'] = [
+    const columns: TableProps<ProductType>['columns'] = [
         {
-            title: 'Category Id',
-            dataIndex: 'foodID',
-            key: 'foodID',
-            render: (text) => <a>{text}</a>,
+            title: "ID",
+            dataIndex: "productId",
+            key: "productId",
+            width: 80
         },
         {
-            title: 'Food Name',
-            dataIndex: 'foodName',
-            key: 'foodName',
-            render: (text) => <a>{text}</a>,
+            title: "Product",
+            dataIndex: "productName",
+            key: "productName"
         },
         {
-            title: 'Food Price',
-            dataIndex: 'foodPrice',
-            key: 'foodPrice',
-            render: (text) => <a>{`RS.${text}.00`}</a>,
+            title: "Brand",
+            dataIndex: "brand",
+            key: "brand"
         },
         {
-            title: 'Category Name',
-            dataIndex: 'categoryId',
-            key: 'categoryId',
-            render: (_, record) => record.categoryId.name,
+            title: "Model",
+            dataIndex: "model",
+            key: "model"
         },
         {
-            title: 'Created At',
-            dataIndex: 'createdAt',
-            key: 'createdAt',
-            render: (text) => <a>{text}</a>,
+            title: "IMEI",
+            dataIndex: "imeiNumber",
+            key: "imeiNumber"
         },
         {
-            title: 'Size',
-            dataIndex: 'size',
-            key: 'size',
-            render: (text) => <a>{text}</a>,
+            title: "Color",
+            dataIndex: "color",
+            key: "color"
         },
         {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            render: (status: string) => {
-                let color = 'green';
-
-                if (status === 'INACTIVE') color = 'volcano';
-                if (status === 'PENDING') color = 'gold';
-                if (status === 'BLOCKED') color = 'red';
-
-                return (
-                    <Tag color={color}>
-                        {status.toUpperCase()}
-                    </Tag>
-                );
-            },
+            title: "Storage",
+            dataIndex: "storageCapacity",
+            key: "storageCapacity"
         },
         {
-            title: 'Update By',
-            dataIndex: 'updatedBy',
-            key: 'updatedBy',
+            title: "Condition",
+            dataIndex: "condition",
+            key: "condition",
+            render: (condition) => (
+                <Tag color={condition === "NEW" ? "green" : "orange"}>
+                    {condition}
+                </Tag>
+            )
+        },
+        {
+            title: "Purchase (Rs)",
+            dataIndex: "purchasePrice",
+            key: "purchasePrice"
+        },
+        {
+            title: "Selling (Rs)",
+            dataIndex: "sellingPrice",
+            key: "sellingPrice"
+        },
+        {
+            title: "Stock",
+            dataIndex: "quantityInStock",
+            key: "quantityInStock",
+            render: (qty) => (
+                <Tag color={qty > 0 ? "blue" : "red"}>
+                    {qty}
+                </Tag>
+            )
+        },
+        {
+            title: "Discount %",
+            dataIndex: "discountPercentage",
+            key: "discountPercentage",
+            render: (d) => d ? `${d}%` : "-"
+        },
+        {
+            title: "Category",
+            key: "category",
+            render: (_, record) => record.categoryId?.name || "-"
+        },
+        {
+            title: "Status",
+            dataIndex: "status",
+            key: "status",
+            render: (status) => (
+                <Tag color={status === "ACTIVE" ? "green" : "red"}>
+                    {status}
+                </Tag>
+            )
+        },
+        {
+            title: "Created At",
+            dataIndex: "createdAt",
+            key: "createdAt"
         },
         {
             title: 'Action',
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    {/* <CustomeDrawer
-                        name={record.foodName} email={''} phone={''} /> */}
                     <UpdateProductDrawer
-                        foodName={record.foodName}
-                        foodPrice={record.foodPrice}
-                        cId={record.categoryId.categoryId}
-                        size={record.size}
-                        discountPercentage={0}
-                        foodId={record.foodID}
+                        productId={record.productId}
+                        productName={record.productName}
+                        brand={record.brand}
+                        model={record.model}
+                        purchasePrice={record.purchasePrice}
+                        sellingPrice={record.sellingPrice}
+                        categoryId={record.categoryId.categoryId}
+                        discountPercentage={record.discountPercentage}
+                        status={record.status}
+                        color={record.color}
+                        imeiNumber={record.imeiNumber}
+                        condition={record.condition}
+                        storageCapacity={record.storageCapacity}
+                        quantityInStock={record.quantityInStock}
                     />
-                        
                     <ConfirmDelete
-                        onConfirm={() => handleDelete(record.foodID)}
-                        onCancel={() => console.log("Cancelled delete for", record.foodID)}
+                        onConfirm={() => handleDelete(record.productId, refreshTable)}
+                        onCancel={() => console.log("Cancelled delete for", record.productId)}
                     />
                 </Space>
             ),
         },
     ];
 
-    return <Table<DataType> columns={columns} dataSource={tableData} loading={loadingData} scroll={{ y: '40vh', x: 'max-content' }} />;
+    return <Table<ProductType> rowKey="productId" columns={columns} dataSource={tableData} loading={loadingData} scroll={{ y: '40vh', x: 'max-content' }} />;
 };
 
 export default ProductTable;

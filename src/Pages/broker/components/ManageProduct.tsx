@@ -2,34 +2,19 @@ import { ToastContainer } from 'react-toastify';
 import { Box } from '@mui/material';
 import { Button, Form, Input, Space } from 'antd';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import CreateProductDrawer from '../function/CreateProductDrawer';
 import ProductTable from '../function/ProductTable';
 import { ReloadOutlined } from '@ant-design/icons';
-import API_ENDPOINTS from '../../../constant/backend-endpoints';
+import { viewAllProduct } from '../../../service/ManageProduct.service';
+import { ProductType } from '../../../model/BaseCreateProduct';
 
 const { Search } = Input;
 
-interface categoryType {
-  categoryId: number;
-  name: string;
-}
-interface DataType {
-  foodID: number;
-  foodName: string;
-  foodPrice: number;
-  phoneNumber: string;
-  status: string;
-  createdAt: string;
-  size: string;
-  updatedBy: string;
-  categoryId: categoryType;
-}
 export default function ManageProduct() {
   const [form] = Form.useForm();
-  const [data, setData] = useState<DataType[]>([]);
+  const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [filteredData, setFilteredData] = useState<DataType[]>([]);
+  const [filteredData, setFilteredData] = useState<ProductType[]>([]);
 
   const handleFinish = (values: { search: string }) => {
     console.log("Search value:", values.search);
@@ -39,7 +24,7 @@ export default function ManageProduct() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(API_ENDPOINTS.VIEW_ALL_PRODUCT);
+      const response = await viewAllProduct();
       setData(response.data.data);
       setFilteredData(response.data.data);
     } catch (error) {
@@ -61,8 +46,8 @@ export default function ManageProduct() {
       return;
     }
 
-    const result = data.filter((item: DataType) =>
-      item.foodName.toLowerCase().includes(searchValue)
+    const result = data.filter((item: ProductType) =>
+      item.productName.toLowerCase().includes(searchValue)
     );
 
     setFilteredData(result);
@@ -99,7 +84,7 @@ export default function ManageProduct() {
           </Box>
         </div>
         <div className='flex gap-1'>
-          <CreateProductDrawer />
+          <CreateProductDrawer refreshTable={fetchData}/>
           <div>
             <Button
               className="no-hover-btn"
@@ -114,7 +99,7 @@ export default function ManageProduct() {
       </div>
 
       <div className="mt-5">
-        <ProductTable tableData={filteredData} loadingData={loading} />
+        <ProductTable tableData={filteredData} loadingData={loading} refreshTable={fetchData} />
       </div>
     </div>
   );

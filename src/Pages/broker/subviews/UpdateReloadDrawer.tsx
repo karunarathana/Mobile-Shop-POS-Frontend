@@ -18,7 +18,7 @@ const UpdateReloadDrawer: React.FC<{ rId: number, description: string, price: st
     const onFinish = async (values: any) => {
         console.log('Form Values:', values);
         try {
-            const response = await updateReload(values.rId,values.rDecs, values.price,values.simType,values.status);
+            const response = await updateReload(values.rId, values.rDecs, values.price, values.simType, values.status);
             if (response.data.msg === "Reload update successfully") {
                 showNotification(
                     "success",

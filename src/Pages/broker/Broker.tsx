@@ -4,7 +4,6 @@ import DashBoard from './views/DashBoard';
 import Hotel from './views/Hotel';
 import Bprofile from './views/Bprofile';
 import Category from './views/Category';
-import logo from "./../../assets/Logo/diyadahara.png"
 import ManageProduct from './components/ManageProduct';
 
 import dash from "./../../assets/Dashboard/dashboard.png"
@@ -14,6 +13,7 @@ import account from "./../../assets/Dashboard/Account.png"
 import category from "./../../assets/Dashboard/category.png"
 import order from "./../../assets/Dashboard/order.png"
 import bill from "./../../assets/Dashboard/bill.png"
+import reload from "./../../assets/Dashboard/reload.png"
 import MainDashBoard from './views/MainDashBoard';
 import ManageOrder from './components/ManageOrder';
 import ReloadDashboard from './views/ReloadDashBoar';
@@ -63,7 +63,7 @@ export default function Broker() {
                             </div>
                             <div onClick={() => { setRedirectPage("order") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
                                 <img className='w-[30px]' src={order} alt="" />
-                                <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Customer Order</p>
+                                <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Sell Product</p>
                             </div>
                             <div onClick={() => { setRedirectPage("addusers") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
                                 <img className='w-[30px]' src={cutomer} alt="" />
@@ -78,7 +78,7 @@ export default function Broker() {
                                 <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Manage Product</p>
                             </div>
                             <div onClick={() => { setRedirectPage("reload") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
-                                <img className='w-[30px]' src={account} alt="" />
+                                <img className='w-[30px]' src={reload} alt="" />
                                 <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Reload</p>
                             </div>
                             <div onClick={() => { setRedirectPage("profile") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
