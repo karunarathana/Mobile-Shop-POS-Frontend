@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Drawer, Form, Input, Row, Select, Space } from 'antd';
-import { createProduct } from '../../../service/ManageProduct.service';
+import { createProduct } from '../../../service/ManageAccessory.service';
 import { showNotification } from '../components/Notification';
 
 interface createproductProps {

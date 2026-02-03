@@ -17,6 +17,7 @@ import reload from "./../../assets/Dashboard/reload.png"
 import MainDashBoard from './views/MainDashBoard';
 import ManageOrder from './components/ManageOrder';
 import ReloadDashboard from './views/ReloadDashBoar';
+import ManageAccessory from './views/ManageAccessory';
 
 
 export default function Broker() {
@@ -41,6 +42,8 @@ export default function Broker() {
                 return <ReloadDashboard />;
             case "product":
                 return <ManageProduct />;
+            case "accessory":
+                return <ManageAccessory />;
         }
     }
     return (
@@ -76,6 +79,10 @@ export default function Broker() {
                             <div onClick={() => { setRedirectPage("product") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
                                 <img className='w-[30px]' src={mproduct} alt="" />
                                 <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Manage Product</p>
+                            </div>
+                            <div onClick={() => { setRedirectPage("accessory") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
+                                <img className='w-[30px]' src={mproduct} alt="" />
+                                <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Manage Accessory</p>
                             </div>
                             <div onClick={() => { setRedirectPage("reload") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
                                 <img className='w-[30px]' src={reload} alt="" />

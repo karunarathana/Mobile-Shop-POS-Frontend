@@ -83,7 +83,7 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
     },
   ];
 
-  return <Table<DataType> columns={columns} dataSource={tableData} loading={loadingData} scroll={{ y: '40vh', x: 'max-content' }} />;
+  return <Table<DataType> rowKey={"customerEmail"} columns={columns} dataSource={tableData} loading={loadingData} scroll={{ y: '40vh', x: 'max-content' }} />;
 };
 
 export default CustomerTable;

@@ -3,7 +3,7 @@ import { Table, Space, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import ConfirmDelete from '../components/Confirmation';
 import UpdateProductDrawer from '../subviews/UpdateProductDrawer';
-import { ProductType } from '../../../model/BaseCreateProduct';
+import {ProductType } from '../../../model/BaseCreateProduct';
 import { deleteProduct } from '../../../service/ManageAccessory.service';
 import { showNotification } from '../components/Notification';
 
@@ -35,7 +35,7 @@ async function handleDelete(key: number, refreshTable: () => void) {
     }
 }
 
-const ProductTable: React.FC<CustomerTableProps> = ({
+const AccessoryTable: React.FC<CustomerTableProps> = ({
     tableData,
     loadingData,
     refreshTable
@@ -49,7 +49,7 @@ const ProductTable: React.FC<CustomerTableProps> = ({
             width: 80
         },
         {
-            title: "Product",
+            title: "Accessory",
             dataIndex: "productName",
             key: "productName"
         },
@@ -59,49 +59,37 @@ const ProductTable: React.FC<CustomerTableProps> = ({
             key: "brand"
         },
         {
-            title: "Model",
-            dataIndex: "model",
-            key: "model"
+            title: "Rack",
+            dataIndex: "rackId",
+            key: "rackId"
         },
         {
-            title: "IMEI",
-            dataIndex: "imeiNumber",
-            key: "imeiNumber"
+            title: "Type",
+            dataIndex: "type",
+            key: "type"
         },
         {
-            title: "Color",
-            dataIndex: "color",
-            key: "color"
+            title: "Compatible With",
+            dataIndex: "compatibleWith",
+            key: "compatibleWith",
+            render: (value) => value || "-"
         },
         {
-            title: "Storage",
-            dataIndex: "storageCapacity",
-            key: "storageCapacity"
-        },
-        {
-            title: "Condition",
-            dataIndex: "condition",
-            key: "condition",
-            render: (condition) => (
-                <Tag color={condition === "NEW" ? "green" : "orange"}>
-                    {condition}
-                </Tag>
-            )
-        },
-        {
-            title: "Purchase (Rs)",
+            title: "Cost Price",
             dataIndex: "purchasePrice",
-            key: "purchasePrice"
+            key: "purchasePrice",
+            render: (price) => `Rs. ${price}`
         },
         {
-            title: "Selling (Rs)",
+            title: "Sell Price",
             dataIndex: "sellingPrice",
-            key: "sellingPrice"
+            key: "sellingPrice",
+            render: (price) => `Rs. ${price}`
         },
         {
-            title: "Stock",
-            dataIndex: "quantityInStock",
-            key: "quantityInStock",
+            title: "Qty",
+            dataIndex: "stock",
+            key: "stock",
             render: (qty) => (
                 <Tag color={qty > 0 ? "blue" : "red"}>
                     {qty}
@@ -109,30 +97,19 @@ const ProductTable: React.FC<CustomerTableProps> = ({
             )
         },
         {
-            title: "Discount %",
-            dataIndex: "discountPercentage",
-            key: "discountPercentage",
-            render: (d) => d ? `${d}%` : "-"
-        },
-        {
-            title: "Category",
-            key: "category",
-            render: (_, record) => record.categoryId?.name || "-"
-        },
-        {
             title: "Status",
             dataIndex: "status",
             key: "status",
             render: (status) => (
-                <Tag color={status === "ACTIVE" ? "green" : "red"}>
+                <Tag color={status === "ACTIVE" ? "green" : "volcano"}>
                     {status}
                 </Tag>
             )
         },
         {
             title: "Created At",
-            dataIndex: "createdAt",
-            key: "createdAt"
+            dataIndex: "createAt",
+            key: "createAt"
         },
         {
             title: 'Action',
@@ -140,20 +117,20 @@ const ProductTable: React.FC<CustomerTableProps> = ({
             render: (_, record) => (
                 <Space size="middle">
                     <UpdateProductDrawer
-                        productId={record.productId}
+                        productId={7}
                         productName={record.productName}
-                        brand={record.brand}
-                        model={record.model}
+                        brand={record.accessoryId?.brand}
+                        model={"test"}
                         purchasePrice={record.purchasePrice}
                         sellingPrice={record.sellingPrice}
-                        categoryId={record.categoryId.categoryId}
+                        categoryId={1}
                         discountPercentage={record.discountPercentage}
                         status={record.status}
-                        color={record.color}
-                        imeiNumber={record.imeiNumber}
-                        condition={record.condition}
-                        storageCapacity={record.storageCapacity}
-                        quantityInStock={record.quantityInStock}
+                        color={record.accessoryId?.color}
+                        imeiNumber={""}
+                        condition={"NEW"}
+                        storageCapacity={""}
+                        quantityInStock={1}
                     />
                     <ConfirmDelete
                         onConfirm={() => handleDelete(record.productId, refreshTable)}
@@ -167,5 +144,5 @@ const ProductTable: React.FC<CustomerTableProps> = ({
     return <Table<ProductType> rowKey="productId" columns={columns} dataSource={tableData} loading={loadingData} scroll={{ y: '40vh', x: 'max-content' }} />;
 };
 
-export default ProductTable;
+export default AccessoryTable;
 

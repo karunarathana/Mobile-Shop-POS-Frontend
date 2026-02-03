@@ -2,15 +2,15 @@ import { ToastContainer } from 'react-toastify';
 import { Box } from '@mui/material';
 import { Button, Form, Input, Space } from 'antd';
 import { useEffect, useState } from 'react';
-import CreateProductDrawer from '../function/CreateProductDrawer';
-import ProductTable from '../function/ProductTable';
 import { ReloadOutlined } from '@ant-design/icons';
 import { viewAllProduct } from '../../../service/ManageAccessory.service';
 import { ProductType } from '../../../model/BaseCreateProduct';
+import AccessoryTable from '../function/AccessoryTable';
+import CreateAccessoryDrawer from '../function/CreateAccessoryDrawer';
 
 const { Search } = Input;
 
-export default function ManageProduct() {
+export default function ManageAccessory() {
   const [form] = Form.useForm();
   const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,6 +27,7 @@ export default function ManageProduct() {
       const response = await viewAllProduct();
       setData(response.data.data);
       setFilteredData(response.data.data);
+
     } catch (error) {
       console.error('Failed to fetch Product:', error);
     } finally {
@@ -53,10 +54,11 @@ export default function ManageProduct() {
     setFilteredData(result);
   };
 
+
   return (
     <div className="p-[10px]">
       <ToastContainer />
-      <h2 className="text-2xl font-bold mb-4">උපාංග (Product) කළමණාකරන පිටුව</h2>
+      <h2 className="text-2xl font-bold mb-4">Accessory කළමණාකරන පිටුව</h2>
       <div>
         <div>
           <Box sx={{
@@ -84,7 +86,7 @@ export default function ManageProduct() {
           </Box>
         </div>
         <div className='flex gap-1'>
-          <CreateProductDrawer refreshTable={fetchData}/>
+          <CreateAccessoryDrawer refreshTable={fetchData} />
           <div>
             <Button
               className="no-hover-btn"
@@ -99,7 +101,7 @@ export default function ManageProduct() {
       </div>
 
       <div className="mt-5">
-        <ProductTable tableData={filteredData} loadingData={loading} refreshTable={fetchData} />
+        <AccessoryTable tableData={filteredData} loadingData={loading} refreshTable={fetchData} />
       </div>
     </div>
   );

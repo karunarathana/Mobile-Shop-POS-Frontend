@@ -2,7 +2,7 @@ import React, {useState } from 'react';
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Col, Drawer, Form, Input, Row, Select, Space } from 'antd';
 import { showNotification } from '../components/Notification';
-import { updateProduct } from '../../../service/ManageProduct.service';
+import { updateProduct } from '../../../service/ManageAccessory.service';
 import { UpdateProductDrawerProps } from '../../../model/BaseCreateProduct';
 
 const UpdateProductDrawer: React.FC<UpdateProductDrawerProps> = ({
