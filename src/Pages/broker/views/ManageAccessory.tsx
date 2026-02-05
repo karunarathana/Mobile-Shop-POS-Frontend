@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { Button, Form, Input, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { ReloadOutlined } from '@ant-design/icons';
-import { viewAllProduct } from '../../../service/ManageAccessory.service';
+import { viewAllAccessory} from '../../../service/ManageAccessory.service';
 import { ProductType } from '../../../model/BaseCreateProduct';
 import AccessoryTable from '../function/AccessoryTable';
 import CreateAccessoryDrawer from '../function/CreateAccessoryDrawer';
@@ -24,7 +24,7 @@ export default function ManageAccessory() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await viewAllProduct();
+      const response = await viewAllAccessory();
       setData(response.data.data);
       setFilteredData(response.data.data);
 

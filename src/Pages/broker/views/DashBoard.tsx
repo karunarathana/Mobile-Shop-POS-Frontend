@@ -10,6 +10,8 @@ import { showNotification } from '../components/Notification';
 import API_ENDPOINTS from '../../../constant/backend-endpoints';
 import CreateExpensiveDrawer from '../function/CreateExpensiveDrawer';
 import { ProductType } from '../../../model/BaseCreateProduct';
+import { getSingleCustomer } from '../../../service/CreateCustomer.service';
+import { createSale } from '../../../service/ManageSale.service';
 
 interface CartItem extends responseProductByCategory {
     quantity: number;
@@ -36,6 +38,8 @@ export default function DashBoard() {
     const [filterProduct, setFilterProducts] = useState<ProductType[]>([]);
     const [phoneNumber, setphoneNumber] = useState<string>();
     const [customerId, setCustomerId] = useState<number>();
+    const [saleItem, setSaleItem] = useState<any[]>([]);
+    const [calculateReturnMoney, setCalculateReturnMoney] = useState<number>();
     const [loading, setLoading] = useState<boolean>(false);
 
     // Fetch data from backend
@@ -65,7 +69,7 @@ export default function DashBoard() {
     };
 
     useEffect(() => {
-        fetchData("PHONE");
+        fetchData("Mobile Phone");
     }, []);
 
     const loadProductItem = (categoryName: string) => {
@@ -124,49 +128,91 @@ export default function DashBoard() {
 
     const handleFinish = (values: { search: string }) => {
         console.log("Search value:", values.search);
-        showNotification(
-            "success",
-            "Success",
-            "Product created successfully!"
-        );
     };
+
     const checkCustomer = async () => {
-        try {
-            const customerResponse = await axios.get(
-                API_ENDPOINTS.VIEW_SINGLE_CUSTOMER,
-                {
-                    params: {
-                        customerId: phoneNumber?.trim(),
-                    },
-                }
+        console.log(phoneNumber);
+        const response = await getSingleCustomer(phoneNumber?.trim() || "");
+        console.log(response);
+
+        if (response.data.msg === "Customer Already Existing In System") {
+            showNotification(
+                "success",
+                "සාර්තකයි (Success)",
+                "ඔබට වෙලදාපොළට පිවිසිය හැකිය (You can proceed to the shop)"
             );
-            console.log(customerResponse.data);
-            setCustomerId(customerResponse.data.data.customerID)
-            if (customerResponse.data.msg === "Customer Already Existing In System" && customerResponse.data.statusCode === "200") {
-                showNotification(
-                    "success",
-                    "Success",
-                    customerResponse.data.msg
-                );
-            } else {
-                showNotification(
-                    "error",
-                    "Error",
-                    customerResponse.data.msg
-                );
-            }
-
-
-        } catch (error) {
-            console.error('Failed to fetch customers:', error);
-        } finally {
-            setLoading(false);
+            setCustomerId(response.data.data.customerID);
+            console.log("Customer ID:", response.data.data.customerID);
+        } else {
+            showNotification(
+                "error",
+                "දෝෂයක් (Error)",
+                "මෙම ගනුදෙනුකරු සොයාගත නොහැක (Customer not found in the system)"
+            );
         }
+
     };
 
     const placeOrder = async () => {
+        if (!customerId) {
+            showNotification(
+                "error",
+                "දෝෂයක් (Error)",
+                "කරුණාකර පළමුව ගනුදෙනුකරු පරීක්ෂා කරන්න"
+            );
+            return;
+        }
 
-    }
+        if (!calculateReturnMoney) {
+            showNotification(
+                "error",
+                "දෝෂයක් (Error)",
+                "කරුණාකර ලැබුන ගනන ඇතුලත් කරන්න"
+            );
+            return;
+        }
+
+        // ✅ Build sale items locally
+        const saleItemsDto = cartItems.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            unitPrice: item.sellingPrice,
+            discountAmount: 0,
+            warrantyDuration: 0
+        }));
+
+        const saleDto = {
+            totalAmount: 145000, // (or calculate from cart)
+            paymentMethod: "CASH",
+            paymentStatus: "PAID",
+            customerId: customerId,
+            saleItems: saleItemsDto
+        };
+
+        console.log("Sale DTO:", saleDto);
+
+        try {
+            await createSale(saleDto);
+
+            showNotification(
+                "success",
+                "සාර්ථකයි (Success)",
+                "Order එක සාර්ථකව සෑදුවා"
+            );
+
+            // ✅ Clear states
+            setCartItems([]);
+            setSaleItem([]);
+
+        } catch (error) {
+            showNotification(
+                "error",
+                "දෝෂයක් (Error)",
+                "Order එක සෑදීම අසාර්ථකයි"
+            );
+        }
+    };
+
 
     const handleSearch = (value: string) => {
         const searchValue = value.trim();
@@ -240,7 +286,7 @@ export default function DashBoard() {
                         <div className="mt-2">
                             <h2 className="text-[1.7rem] font-semibold">අපගේ උපාංග (Our Product)</h2>
 
-                            <div className="max-h-[250px] overflow-y-auto pr-2">
+                            <div className="max-h-[350px] overflow-y-auto pr-2">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 auto-rows-fr">
 
                                     {filterProduct.length === 0 && <h2>No Data</h2>}
@@ -248,7 +294,7 @@ export default function DashBoard() {
                                     {filterProduct.map((product) => (
                                         <ProductItem
                                             key={product.productId}
-                                            {...product}
+                                            product={product}
                                             onAddToCart={() => handleAddToCart(product)}
                                         />
                                     ))}
@@ -263,11 +309,11 @@ export default function DashBoard() {
                         <h3 className="text-lg font-semibold mb-2">Cart</h3>
                         <div>
                             <Space.Compact style={{ width: '100%' }}>
-                                <Input onChange={(e) => { setphoneNumber(e.target.value) }} placeholder='Check Phone Number' />
-                                <Button onClick={() => { checkCustomer() }} type="primary">Submit</Button>
+                                <Input onChange={(e) => { setphoneNumber(e.target.value) }} placeholder='දුරකතන අංකය ඇතුලත් කරන්න' />
+                                <Button onClick={() => { checkCustomer() }} type="primary">Check</Button>
                             </Space.Compact>
                         </div>
-                        <div className="h-[290px] overflow-y-auto pr-2">
+                        <div className="h-[300px] overflow-y-auto pr-2">
                             {cartItems.map((item) => (
                                 <CompactCartItem
                                     key={item.productId}
@@ -282,16 +328,34 @@ export default function DashBoard() {
                             ))}
                         </div>
                         <div>
-                            <h3 className="text-lg font-semibold mt-4">Total: Rs.
-                                {cartItems.reduce(
-                                    (total, item) => total + item.sellingPrice * item.quantity,
-                                    0
-                                ).toFixed(2)}
+                            <div className='mt-1'>
+                                <Space.Compact style={{ width: '100%' }}>
+                                    <Input onChange={(e) => { setCalculateReturnMoney(Number(e.target.value)) }} placeholder='ලැබුන ගනන එක් කරන්න.' />
+                                </Space.Compact>
+                            </div>
+                            <div className='flex justify-between'>
+                                <h3 className="text-lg font-semibold mt-4">Total:</h3>
+                                <h3 className="text-lg font-semibold mt-4">Rs.
+                                    {cartItems.reduce(
+                                        (total, item) => total + item.sellingPrice * item.quantity,
+                                        0
+                                    ).toFixed(2)}
 
-                            </h3>
+                                </h3>
+                            </div>
+                            <div className='flex justify-between mt-[-1rem]'>
+                                <h3 className="text-lg font-semibold mt-4">Customer:</h3>
+                                <h3 className="text-lg font-semibold mt-4">Rs.
+                                    {cartItems.reduce(
+                                        (total, item) => total + item.sellingPrice * item.quantity - (calculateReturnMoney || 0),
+                                        0
+                                    ).toFixed(2)}
+
+                                </h3>
+                            </div>
                         </div>
                         <div>
-                            <button onClick={() => { placeOrder() }} className=" w-[100%] mt-2 bg-orange-400 hover:bg-orange-600 text-white py-2 px-4 rounded-lg font-medium">Checkout</button>
+                            <button onClick={() => { placeOrder() }} className=" w-[100%] mt-2 bg-blue-400 hover:bg-blue-800 text-white py-2 px-4 rounded-lg font-medium">Sell</button>
                         </div>
                     </div>
 

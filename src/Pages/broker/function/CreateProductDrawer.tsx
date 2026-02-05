@@ -20,8 +20,27 @@ const CreateProductDrawer: React.FC<createproductProps> = ({ refreshTable }) => 
 
     const onFinish = async (values: any) => {
         console.log('Form Values:', values);
+        const productDto = {
+            productName: values.name,
+            purchasePrice: values.purchasePrice,
+            sellingPrice: values.sellingPrice,
+            stock: values.quantityInStock,
+            status: "ACTIVE",
+            discountPercentage: values.discount,
+            type: "Mobile Phone",
+            phoneDto: {
+                brand: values.brand,
+                model: "Hi",
+                imeiNumber: values.imeiNumber,
+                color: values.color,
+                storageCapacity: values.storageCapacity,
+                condition: "NEW",
+                categoryId:1,
+                createBy: "admin",
+            },
+        };
         try {
-            const response = await createProduct(values);
+            const response = await createProduct(productDto);
             console.log(response);
             if (response.data.msg === "Save Product Successfully" && response.data.statusCode === "201") {
                 showNotification(

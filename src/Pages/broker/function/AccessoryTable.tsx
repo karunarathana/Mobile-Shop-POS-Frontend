@@ -3,7 +3,7 @@ import { Table, Space, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import ConfirmDelete from '../components/Confirmation';
 import UpdateProductDrawer from '../subviews/UpdateProductDrawer';
-import {ProductType } from '../../../model/BaseCreateProduct';
+import { ProductType } from '../../../model/BaseCreateProduct';
 import { deleteProduct } from '../../../service/ManageAccessory.service';
 import { showNotification } from '../components/Notification';
 
@@ -55,12 +55,12 @@ const AccessoryTable: React.FC<CustomerTableProps> = ({
         },
         {
             title: "Brand",
-            dataIndex: "brand",
+            dataIndex: ["accessoryId", "brand"],
             key: "brand"
         },
         {
             title: "Rack",
-            dataIndex: "rackId",
+            dataIndex: ["accessoryId", "rackId"],
             key: "rackId"
         },
         {
@@ -70,7 +70,7 @@ const AccessoryTable: React.FC<CustomerTableProps> = ({
         },
         {
             title: "Compatible With",
-            dataIndex: "compatibleWith",
+            dataIndex: ["accessoryId", "compatibleWith"],
             key: "compatibleWith",
             render: (value) => value || "-"
         },
@@ -108,8 +108,8 @@ const AccessoryTable: React.FC<CustomerTableProps> = ({
         },
         {
             title: "Created At",
-            dataIndex: "createAt",
-            key: "createAt"
+            dataIndex: "createdAt",
+            key: "createdAt"
         },
         {
             title: 'Action',
@@ -117,20 +117,21 @@ const AccessoryTable: React.FC<CustomerTableProps> = ({
             render: (_, record) => (
                 <Space size="middle">
                     <UpdateProductDrawer
-                        productId={7}
+                        productId={record.productId}
+                        accessoryId = {record.accessoryId?.accessoryId}
                         productName={record.productName}
                         brand={record.accessoryId?.brand}
-                        model={"test"}
+                        rackId={record.accessoryId?.rackId}
+                        type={record.type}
+                        compatibleWith={record.accessoryId?.compatibleWith}
                         purchasePrice={record.purchasePrice}
                         sellingPrice={record.sellingPrice}
-                        categoryId={1}
+                        categoryId={record.accessoryId?.categoryId.categoryId}
                         discountPercentage={record.discountPercentage}
                         status={record.status}
                         color={record.accessoryId?.color}
-                        imeiNumber={""}
-                        condition={"NEW"}
-                        storageCapacity={""}
-                        quantityInStock={1}
+                        quantityInStock={record.stock}
+                        refreshTable={refreshTable}
                     />
                     <ConfirmDelete
                         onConfirm={() => handleDelete(record.productId, refreshTable)}

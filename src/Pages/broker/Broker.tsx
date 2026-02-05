@@ -14,6 +14,7 @@ import category from "./../../assets/Dashboard/category.png"
 import order from "./../../assets/Dashboard/order.png"
 import bill from "./../../assets/Dashboard/bill.png"
 import reload from "./../../assets/Dashboard/reload.png"
+import phone from "./../../assets/Dashboard/phone.png"
 import MainDashBoard from './views/MainDashBoard';
 import ManageOrder from './components/ManageOrder';
 import ReloadDashboard from './views/ReloadDashBoar';
@@ -77,8 +78,8 @@ export default function Broker() {
                                 <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Manage Categories</p>
                             </div>
                             <div onClick={() => { setRedirectPage("product") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
-                                <img className='w-[30px]' src={mproduct} alt="" />
-                                <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Manage Product</p>
+                                <img className='w-[30px]' src={phone} alt="" />
+                                <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Manage Phone</p>
                             </div>
                             <div onClick={() => { setRedirectPage("accessory") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
                                 <img className='w-[30px]' src={mproduct} alt="" />

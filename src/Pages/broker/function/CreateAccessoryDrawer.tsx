@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Drawer, Form, Input, Row, Select, Space } from 'antd';
-import { createProduct } from '../../../service/ManageAccessory.service';
+import { createAccessoryProduct } from '../../../service/ManageAccessory.service';
 import { showNotification } from '../components/Notification';
 
 interface createproductProps {
@@ -20,8 +20,25 @@ const CreateAccessoryDrawer: React.FC<createproductProps> = ({ refreshTable }) =
 
     const onFinish = async (values: any) => {
         console.log('Form Values:', values);
+        const AccessoryDto = {
+            productName: values.name,
+            purchasePrice: values.costPrice,
+            sellingPrice: values.sellPrice,
+            stock: values.quantity,
+            status: values.status,
+            discountPercentage: values.discountPercentage,
+            type: "Battery",
+            accessoryDto: {
+                rackId: values.rackId,
+                brand: values.brand,
+                color: values.color,
+                compatibleWith: values.compatibleWith,
+                categoryId: 1,
+                createBy: "admin",
+            },
+        };
         try {
-            const response = await createProduct(values);
+            const response = await createAccessoryProduct(AccessoryDto);
             console.log(response);
             if (response.data.msg === "Save Product Successfully" && response.data.statusCode === "201") {
                 showNotification(
@@ -162,6 +179,15 @@ const CreateAccessoryDrawer: React.FC<createproductProps> = ({ refreshTable }) =
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
+                                name="categoryId"
+                                label="Category ID"
+                                rules={[{ required: true }]}
+                            >
+                                <Input type="number" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
                                 name="quantity"
                                 label="Stock Quantity"
                                 rules={[{ required: true }]}
@@ -170,10 +196,32 @@ const CreateAccessoryDrawer: React.FC<createproductProps> = ({ refreshTable }) =
                             </Form.Item>
                         </Col>
                     </Row>
+
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                name="discountPercentage"
+                                label="Discount Percentage"
+                                rules={[{ required: true }]}
+                            >
+                                <Input type="number" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="color"
+                                label="Color"
+                                rules={[{ required: true }]}
+                            >
+                                <Input type="text" />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
                     <Row gutter={16}>
                         <Form.Item label={null}>
                             <Button className='mt-4 w-[210px]' type="primary" htmlType="submit">
-                               Create Accessory
+                                Create Accessory
                             </Button>
                         </Form.Item>
                     </Row>

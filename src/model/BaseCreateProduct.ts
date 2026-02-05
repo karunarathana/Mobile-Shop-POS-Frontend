@@ -58,17 +58,40 @@ export default BaseproductResponse;
 
 export interface UpdateProductDrawerProps {
   productId: number;
+  phoneId?: number;
   productName: string;
   brand: string | undefined;
-  model: string;
+  model: string | undefined;
   purchasePrice: number;
   sellingPrice: number;
-  categoryId: number;
+  categoryId: number | undefined;
   discountPercentage?: number;
   status: string;
+  rackId: string | undefined;
+  type: string;
+  compatibleWith: string | undefined;
   color: string | undefined;
-  imeiNumber: string;
-  condition: "NEW" | "USED";
-  storageCapacity: string;
+  imeiNumber: string | undefined;
+  condition: "NEW" | "USED" | undefined;
+  storageCapacity: string | undefined;
   quantityInStock: number;
+  refreshTable: () => void;
+}
+
+export interface UpdateProductAccessoryDrawerProps {
+  productId: number;
+  accessoryId?: number;
+  productName: string;
+  brand?: string;
+  rackId?: string;
+  type: string;
+  compatibleWith?: string | null;
+  purchasePrice: number;
+  sellingPrice: number;
+  categoryId: number | undefined;
+  discountPercentage?: number;
+  status: string;
+  color?: string | null;
+  quantityInStock: number;
+  refreshTable: () => void; // ✅ optional
 }

@@ -24,7 +24,7 @@ export default function ManageProduct() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await viewAllProduct();
+      const response = await viewAllProduct("Mobile Phone");
       setData(response.data.data);
       setFilteredData(response.data.data);
     } catch (error) {

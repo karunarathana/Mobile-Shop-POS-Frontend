@@ -1,25 +1,26 @@
-import React, {useState } from 'react';
+import React, { useState } from 'react';
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Col, Drawer, Form, Input, Row, Select, Space } from 'antd';
 import { showNotification } from '../components/Notification';
-import { updateProduct } from '../../../service/ManageAccessory.service';
-import { UpdateProductDrawerProps } from '../../../model/BaseCreateProduct';
+import { updateAccessoryProduct} from '../../../service/ManageAccessory.service';
+import { UpdateProductAccessoryDrawerProps } from '../../../model/BaseCreateProduct';
 
-const UpdateProductDrawer: React.FC<UpdateProductDrawerProps> = ({
+const UpdateProductDrawer: React.FC<UpdateProductAccessoryDrawerProps> = ({
     productId,
+    accessoryId,
     productName,
     brand,
-    model,
     purchasePrice,
     sellingPrice,
     categoryId,
     discountPercentage,
     status,
-    imeiNumber,
     color,
-    condition,
-    storageCapacity,
-    quantityInStock
+    rackId,
+    type,
+    compatibleWith,
+    quantityInStock,
+    refreshTable
 }) => {
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
@@ -35,21 +36,37 @@ const UpdateProductDrawer: React.FC<UpdateProductDrawerProps> = ({
     const onFinish = async (values: any) => {
         console.log('Form Values:', values);
         try {
-            const response = await updateProduct(values)
+            const AccessoryDto = {
+                productId: productId,
+                productName: values.name,
+                accessoryId: accessoryId,
+                purchasePrice: values.costPrice,
+                sellingPrice: values.sellPrice,
+                stock: values.quantity,
+                status: values.status,
+                discountPercentage: values.discountPercentage,
+                type: "Battery",
+                accessoryDto: {
+                    rackId: values.rackId,
+                    brand: values.brand,
+                    color: values.color,
+                    compatibleWith: values.compatibleWith,
+                    categoryId: 1,
+                    createBy: "admin",
+                },
+            };
+            console.log(AccessoryDto);
+            const response = await updateAccessoryProduct(AccessoryDto)
+            console.log("API Response ",response);
+            
 
-            if (response.data.msg === "Upgrade Product Successfully" && response.data.statusCode === "201") {
+            if (response.data.msg === "Accessory Updated successfully" && response.data.statusCode === "200") {
                 showNotification(
                     "success",
                     "සාර්ථක පණිවිඩය",
                     "උපාංගය සාර්ථකව යාවත්කාලීන කරනු ලදි!!"
                 );
-            }
-            if (response.data.statusCode === "400" && response.data.msg === "Already Product In System") {
-                showNotification(
-                    "error",
-                    "දෝශ පණිවිඩය",
-                    "උපාංගය දැනටමත් පද්දතියට යොමුකර ඇත!"
-                );
+                refreshTable();
             }
         } catch (error: any) {
             console.error("API Error:", error);
@@ -89,152 +106,103 @@ const UpdateProductDrawer: React.FC<UpdateProductDrawerProps> = ({
                         productId: productId,
                         categoryId: categoryId,
                         name: productName,
-                        staus: status,
+                        status: status,
                         brand: brand,
-                        discount: discountPercentage,
+                        discountPercentage: discountPercentage,
                         color: color,
-                        imeiNumber: imeiNumber,
-                        condition: condition,
-                        storageCapacity: storageCapacity,
-                        purchasePrice: purchasePrice,
-                        sellingPrice: sellingPrice,
-                        quantityInStock: quantityInStock,
-                        model: model
+                        rackId: rackId,
+                        compatibleWith: compatibleWith,
+                        costPrice: purchasePrice,
+                        sellPrice: sellingPrice,
+                        quantity: quantityInStock,
+                        type: type
                     }}
                 >
-                    <Row gutter={16}>
-                        <Col span={12} className='hidden'>
-                            <Form.Item
-                                name="productId"
-                                label=""
-                                rules={[{ required: true, message: '' }]}
-                            >
-                                <Input placeholder="" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="name"
-                                label="උපාංග නාමය"
-                                rules={[{ required: true, message: 'කරුණාකර උපාංග නාමය ඇතුලත් කරන්න' }]}
-                            >
-                                <Input placeholder="කරුණාකර උපාංග නාමය සදහන් කරන්න" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="staus"
-                                label="උපාංග තත්වය"
-                                rules={[{ required: true, message: 'කරුණාකර උපාංග තත්වය කරන්න.' }]}
-                            >
-                                <Select
-                                    placeholder="කාණ්ඩය උපාංග තත්වය තෝරන්න"
-                                    options={[
-                                        { value: 'STOCK', label: 'IN-STOCK' },
-                                        { value: 'OUTSTOCK', label: 'OUT-STOCK' },
-                                    ]}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="categoryId"
-                                label="උපාංගයේ කාණ්ඩය"
-                                rules={[{ required: true, message: 'කරුණාකර උපාංගයේ කාණ්ඩය ඇතුලත් කරන්න' }]}
-                            >
-                                <Input type={"text"} placeholder="කරුණාකර උපාංගයේ කාණ්ඩය සදහන් කරන්න" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="brand"
-                                label="උපාංගයේ වර්ගය"
-                            >
-                                <Input placeholder="කරුණාකර උපාංගයේ වර්ගය සදහන් කරන්න" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="discount"
-                                label="උපාගයේ වට්ටම (Discount %)"
-                            >
-                                <Input type={"number"} placeholder="කරුණාකර උපාගයේ වට්ටම ඇතුලත් කරන්න" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="color"
-                                label="උපාංගයේ වර්ණය"
-                                rules={[{ required: true, message: 'කරුණාකර උපාංගයේ වර්ණය ඇතුලත් කරන්න' }]}
-                            >
-                                <Input placeholder="කරුණාකර උපාංගයේ වර්ණය සදහන් කරන්න" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="model"
-                                label="උපාංග මාදිලිය (Model)"
-                            >
-                                <Input type={"text"} placeholder="කරුණාකර උපාංග මාදිලිය සදහන් කරන්න" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="imeiNumber"
-                                label="උපාංගයේ IMEI"
-                                rules={[{ required: true, message: 'කරුණාකර උපාංගයේ IMEI ඇතුලත් කරන්න' }]}
-                            >
-                                <Input type={"number"} placeholder="කරුණාකර උපාංගයේ IMEI සදහන් කරන්න" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="condition"
-                                label="උපාංගයේ තත්වය"
-                                rules={[{ required: true, message: 'කරුණාකර උපාංගයේ තත්වය ඇතුලත් කරන්න' }]}
-                            >
-                                <Select
-                                    placeholder="කරුණාකර උපාංගයේ තත්වය සදහන් කරන්න"
-                                    options={[
-                                        { label: 'Brand New', value: 'New' },
-                                        { label: 'Used', value: 'Used' },
-                                        { label: 'Others', value: 'Others' },
-                                    ]}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="storageCapacity"
-                                label="උපාංගයේ ධාරිතාවය(Storage)"
-                                rules={[{ required: true, message: 'කරුණාකර උපාංගයේ ධාරිතාවය ඇතුලත් කරන්න' }]}
-                            >
-                                <Input type={"number"} placeholder="කරුණාකර උපාංගයේ ධාරිතාවය සදහන් කරන්න" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
                     <div>
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item
-                                    name="purchasePrice"
+                                    name="name"
+                                    label="උපාංග නාමය"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                                <Form.Item
+                                    name="status"
+                                    label="උපාංග තත්වය"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Select
+                                        options={[
+                                            { value: "ACTIVE", label: "ACTIVE" },
+                                            { value: "INACTIVE", label: "INACTIVE" }
+                                        ]}
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="brand"
+                                    label="Brand"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                                <Form.Item
+                                    name="rackId"
+                                    label="Rack ID"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="type"
+                                    label="Accessory Type"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                                <Form.Item
+                                    name="compatibleWith"
+                                    label="Compatible With"
+                                >
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="costPrice"
                                     label="උපාංගයේ ලබාගත් මිල(Purchase price)"
                                     rules={[{ required: true, message: 'කරුණාකර උපාංගයේ ලබාගත් මිල ඇතුලත් කරන්න' }]}
                                 >
                                     <Input type={"number"} placeholder="කරුණාකර උපාංගයේ ලබාගත් මිල සදහන් කරන්න" />
                                 </Form.Item>
                             </Col>
+
                             <Col span={12}>
                                 <Form.Item
-                                    name="sellingPrice"
+                                    name="sellPrice"
                                     label="උපාංගයේ විකුණුම් මිල(Sell price)"
                                     rules={[{ required: true, message: 'කරුණාකර උපාංගයේ විකුණුම් මිල ඇතුලත් කරන්න' }]}
                                 >
@@ -242,10 +210,20 @@ const UpdateProductDrawer: React.FC<UpdateProductDrawerProps> = ({
                                 </Form.Item>
                             </Col>
                         </Row>
+
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item
-                                    name="quantityInStock"
+                                    name="categoryId"
+                                    label="Category ID"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input type="number" />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="quantity"
                                     label="උපාංගයේ ගණන (Stock)"
                                     rules={[{ required: true, message: 'කරුණාකර උපාංගයේ ගණන ඇතුලත් කරන්න' }]}
                                 >
@@ -253,11 +231,32 @@ const UpdateProductDrawer: React.FC<UpdateProductDrawerProps> = ({
                                 </Form.Item>
                             </Col>
                         </Row>
+
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="discountPercentage"
+                                    label="Discount Percentage"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input type="number" />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="color"
+                                    label="Color"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input type="text" />
+                                </Form.Item>
+                            </Col>
+                        </Row>
                     </div>
                     <Row gutter={16}>
                         <Form.Item label={null}>
                             <Button className='mt-4 w-[210px]' type="primary" htmlType="submit">
-                                Create
+                                Update Accessory
                             </Button>
                         </Form.Item>
                     </Row>

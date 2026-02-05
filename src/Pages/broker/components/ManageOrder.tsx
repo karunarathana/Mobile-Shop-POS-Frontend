@@ -1,81 +1,27 @@
 import { Button, Input, Space } from "antd"
-import { useState } from "react";
-import OrderItemCard from '../components/OrderItem'
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { showNotification } from "./Notification";
 import notFound from '../../../assets/Logo/notfound.jpg'
 import API_ENDPOINTS from "../../../constant/backend-endpoints";
-
-interface Customer {
-    customerEmail: string;
-    customerID: number;
-    customerName: string;
-    phoneNumber: string;
-    registeredAt: string;
-    status: string;
-    updatedAt: string;
-    verified: boolean;
-}
-
-interface Category {
-    categoryId: number;
-    hibernateLazyInitializer?: object;
-    name: string;
-}
-
-interface Product {
-    categoryId: Category;
-    createdAt: string;
-    discountPercentage: number;
-    foodID: number;
-    foodName: string;
-    foodPrice: number;
-    hibernateLazyInitializer?: object;
-    potionId: null | number;
-    size: string;
-    status: string;
-    updatedAt: string;
-    updatedBy: string;
-}
-
-interface Order {
-    createBy: string;
-    createdAt: string;
-    customerId: Customer;
-    orderId: number;
-    status: string;
-    totalPrice: number;
-}
-
-interface OrderItem {
-    orderId: Order;
-    orderItemId: number;
-    potion: string;
-    price: number;
-    productId: Product;
-    quantity: number;
-}
+import SaleCard from "./SaleItem";
+import { SaleItem } from "../../../model/SaleResponse";
 
 export default function ManageOrder() {
     const [phoneNumber, setphoneNumber] = useState<string>();
     const [loading, setLoading] = useState<boolean>(false);
-    const [data, setData] = useState<OrderItem[]>([]);
+    const [saleData, setSaleData] = useState<SaleItem[]>([]);
 
     // Fetch data from backend
     const fetchData = async () => {
         try {
             const response = await axios.get(
-                API_ENDPOINTS.VIEWS_ORDER_SINGLE_CUSTOMER,
-                {
-                    params: {
-                        CusPhoneNumber: phoneNumber
-                    }
-                }
+                API_ENDPOINTS.VIEW_ALL_SALE_ITEMS,
             );
 
-            const items = response.data.itemData || [];
+            const items = response.data.saleItems || [];
 
-            setData(items);
+            setSaleData(items);
             setLoading(items.length > 0);
 
             console.log("Fetched items:", items);
@@ -87,6 +33,11 @@ export default function ManageOrder() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        // Initial data fetch or other setup can go here
+        fetchData();
+    }, []);
 
 
     const checkCustomer = async () => {
@@ -100,13 +51,7 @@ export default function ManageOrder() {
             );
         }
     }
-    const orderData = {
-        itemData: data,
-        msg: null,
-        orderData: null,
-        statusCode: null
-    };
-
+  
     const handleCancelOrder = (orderItemId: number) => {
         // Implement cancel order logic
         console.log('Cancel order:', orderItemId);
@@ -132,22 +77,11 @@ export default function ManageOrder() {
                     <Button onClick={() => { checkCustomer() }} type="primary">Submit</Button>
                 </Space.Compact>
             </div>
-            {data.length > 0 ? (
-                <div className="mt-1 max-h-[65vh] overflow-y-auto">
-                    <OrderItemCard
-                        orderData={orderData}
-                        onCancelOrder={handleCancelOrder}
-                        onSellOrder={handleSellOrder}
-                    />
-                </div>
-            ) : (
-                <div className="mt-2 flex flex-col justify-center items-center">
-                    <div className="h-[50vh]">
-                        <img className="h-full" src={notFound} alt="" />
-                    </div>
-                    <p className="text-[1rem] md: mt-1 text-[2.5rem] font-sans font-semibold">No orders found</p>
-                </div>
-            )}
+            <div className="mt-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 overflow-y-auto max-h-[28rem]">
+                {saleData.map(item => (
+                    <SaleCard key={item.saleItemId} item={item} />
+                ))}
+            </div>
         </div>
     )
 }

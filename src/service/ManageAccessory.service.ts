@@ -26,11 +26,34 @@ export const createProduct = async (values: any): Promise<AxiosResponse<Baseprod
   }
 };
 
-export const updateProduct = async (values: any): Promise<AxiosResponse<BaseproductResponse>> => {
+export const createAccessoryProduct = async (values: any): Promise<AxiosResponse<BaseproductResponse>> => {
   console.log('Form Values:', values);
   try {
     const response = await axios.post<BaseproductResponse>(
-      API_ENDPOINTS.UPDATE_PRODUCT,
+      API_ENDPOINTS.CREATE_ACCESSORY_PRODUCT,
+      values,
+    );
+
+    console.log("**********************************");
+    console.log("API Call Started In createProduct");
+    console.log("**********************************");
+    console.log("API Response:", response.data);
+    console.log("API Call Finished In createProduct");
+    console.log("**********************************");
+
+    return response;
+
+  } catch (error: any) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
+export const updateAccessoryProduct = async (values: any): Promise<AxiosResponse<BaseproductResponse>> => {
+  console.log('Form Values:', values);
+  try {
+    const response = await axios.post<BaseproductResponse>(
+      API_ENDPOINTS.UPDATE_ACCESSORY_PRODUCT,
       values,
     );
 
@@ -49,13 +72,13 @@ export const updateProduct = async (values: any): Promise<AxiosResponse<Baseprod
   }
 };
 
-export const viewAllProduct = async (): Promise<AxiosResponse<BaseproductResponse>> => {
+export const viewAllProduct = async (type: string): Promise<AxiosResponse<BaseproductResponse>> => {
   try {
     const response = await axios.get<BaseproductResponse>(
       API_ENDPOINTS.GET_ALL_PRODUCT_SINGLE_CATEGORY,
       {
         params: {
-          type: "Back Covers",
+          type: type,
         },
       }
     );
@@ -65,6 +88,26 @@ export const viewAllProduct = async (): Promise<AxiosResponse<BaseproductRespons
     console.log("**********************************");
     console.log("API Response:", response.data);
     console.log("API Call Finished In viewAllProduct");
+    console.log("**********************************");
+
+    return response;
+  } catch (error: any) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
+export const viewAllAccessory = async (): Promise<AxiosResponse<BaseproductResponse>> => {
+  try {
+    const response = await axios.get<BaseproductResponse>(
+      API_ENDPOINTS.GET_ALL_ACCESSORY,
+    );
+
+    console.log("**********************************");
+    console.log("API Call Started In viewAllAccessory");
+    console.log("**********************************");
+    console.log("API Response:", response.data);
+    console.log("API Call Finished In viewAllAccessory");
     console.log("**********************************");
 
     return response;

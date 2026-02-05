@@ -2,19 +2,15 @@ import food from '../../../assets/Logo/food1.jpg'
 import ProductDescribeModal from '../../../modal/ProductDescribeModal';
 
 interface responseProductByCategory {
-  productId: number,
-  productName: string;
-  sellingPrice: number
+  product: any; // later you can replace with Product interface
   onAddToCart?: () => void;
 }
 
 const FoodProductCard: React.FC<responseProductByCategory> = ({
-  productId,
-  productName,
-  sellingPrice,
+  product,
   onAddToCart
 }) => {
-  const discount = sellingPrice ? Math.round(((sellingPrice - sellingPrice) / sellingPrice) * 100) : 0;
+  const discount = product.sellingPrice ? Math.round(((product.sellingPrice - product.sellingPrice) / product.sellingPrice) * 100) : 0;
 
   return (
     <div className="w-[13em] h-60 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden border border-gray-100 flex">
@@ -58,11 +54,11 @@ const FoodProductCard: React.FC<responseProductByCategory> = ({
       <div className="w-3/5 h-full p-4 flex flex-col justify-between">
         {/* Top Section: Name and Portion */}
         <div>
-          <h3 className="font-semibold text-gray-800 text-lg mb-1 line-clamp-2">{productName}</h3>
+          <h3 className="font-semibold text-gray-800 text-lg mb-1 line-clamp-2">{product.productName}</h3>
         </div>
 
         <div>
-         <ProductDescribeModal/>
+         <ProductDescribeModal product={product}/>
         </div>
 
         {/* Price and Button Section */}
@@ -70,7 +66,7 @@ const FoodProductCard: React.FC<responseProductByCategory> = ({
           {/* Price Section */}
           <div className="mb-3">
             <div className="flex items-baseline space-x-2">
-              <span className="text-lg font-bold text-gray-900">RS.{sellingPrice.toFixed(2)}</span>
+              <span className="text-lg font-bold text-gray-900">RS.{product.sellingPrice.toFixed(2)}</span>
             </div>
           </div>
 

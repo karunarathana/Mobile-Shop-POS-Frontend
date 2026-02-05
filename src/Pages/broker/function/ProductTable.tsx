@@ -55,32 +55,32 @@ const ProductTable: React.FC<CustomerTableProps> = ({
         },
         {
             title: "Brand",
-            dataIndex: "brand",
+            dataIndex: ["phone", "brand"],
             key: "brand"
         },
         {
             title: "Model",
-            dataIndex: "model",
+            dataIndex: ["phone", "model"],
             key: "model"
         },
         {
             title: "IMEI",
-            dataIndex: "imeiNumber",
+            dataIndex: ["phone", "imeiNumber"],
             key: "imeiNumber"
         },
         {
             title: "Color",
-            dataIndex: "color",
+            dataIndex: ["phone", "color"],
             key: "color"
         },
         {
             title: "Storage",
-            dataIndex: "storageCapacity",
+            dataIndex: ["phone", "storageCapacity"],
             key: "storageCapacity"
         },
         {
             title: "Condition",
-            dataIndex: "condition",
+            dataIndex: ["phone", "condition"],
             key: "condition",
             render: (condition) => (
                 <Tag color={condition === "NEW" ? "green" : "orange"}>
@@ -100,10 +100,10 @@ const ProductTable: React.FC<CustomerTableProps> = ({
         },
         {
             title: "Stock",
-            dataIndex: "quantityInStock",
-            key: "quantityInStock",
+            dataIndex: "stock",
+            key: "stock",
             render: (qty) => (
-                <Tag color={qty > 0 ? "blue" : "red"}>
+                <Tag color={qty > 3 ? "blue" : "red"}>
                     {qty}
                 </Tag>
             )
@@ -116,8 +116,8 @@ const ProductTable: React.FC<CustomerTableProps> = ({
         },
         {
             title: "Category",
-            key: "category",
-            render: (_, record) => record.categoryId?.name || "-"
+            dataIndex: ["phone", "categoryId", "name"],
+            key: "name"
         },
         {
             title: "Status",
@@ -141,19 +141,21 @@ const ProductTable: React.FC<CustomerTableProps> = ({
                 <Space size="middle">
                     <UpdateProductDrawer
                         productId={record.productId}
+                        phoneId={record.phone?.phoneId}
                         productName={record.productName}
-                        brand={record.brand}
-                        model={record.model}
+                        brand={record.phone?.brand}
+                        model={record.phone?.model}
                         purchasePrice={record.purchasePrice}
                         sellingPrice={record.sellingPrice}
-                        categoryId={record.categoryId.categoryId}
+                        categoryId={record.phone?.categoryId.categoryId}
                         discountPercentage={record.discountPercentage}
                         status={record.status}
-                        color={record.color}
-                        imeiNumber={record.imeiNumber}
-                        condition={record.condition}
-                        storageCapacity={record.storageCapacity}
-                        quantityInStock={record.quantityInStock}
+                        color={record.phone?.color}
+                        imeiNumber={record.phone?.imeiNumber}
+                        condition={record.phone?.condition}
+                        storageCapacity={record.phone?.storageCapacity}
+                        quantityInStock={record.stock}
+                        refreshTable={refreshTable}
                     />
                     <ConfirmDelete
                         onConfirm={() => handleDelete(record.productId, refreshTable)}
