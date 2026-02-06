@@ -19,6 +19,7 @@ import MainDashBoard from './views/MainDashBoard';
 import ManageOrder from './components/ManageOrder';
 import ReloadDashboard from './views/ReloadDashBoar';
 import ManageAccessory from './views/ManageAccessory';
+import ManageRepaire from './views/ManageRepaire';
 
 
 export default function Broker() {
@@ -38,7 +39,7 @@ export default function Broker() {
             case "order":
                 return <ManageOrder />;
             case "profile":
-                return <Bprofile />;
+                return <ManageRepaire />;
             case "reload":
                 return <ReloadDashboard />;
             case "product":

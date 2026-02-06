@@ -174,6 +174,7 @@ export default function DashBoard() {
 
         // ✅ Build sale items locally
         const saleItemsDto = cartItems.map(item => ({
+            productType:"MOBILE",
             productId: item.productId,
             quantity: item.quantity,
             unitPrice: item.sellingPrice,

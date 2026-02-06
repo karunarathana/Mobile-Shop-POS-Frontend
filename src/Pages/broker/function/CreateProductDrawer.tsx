@@ -32,7 +32,7 @@ const CreateProductDrawer: React.FC<createproductProps> = ({ refreshTable }) => 
             stock: values.quantityInStock,
             status: values.staus,
             discountPercentage: values.discount,
-            type: values.categoryId.name,
+            type: "Mobile Phone",
             phoneDto: {
                 brand: values.brand,
                 model: values.modal,

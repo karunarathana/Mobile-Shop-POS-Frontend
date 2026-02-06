@@ -1,13 +1,11 @@
-import { Button, Input, Space } from "antd"
+import { Button, DatePicker, Input, Space } from "antd"
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { showNotification } from "./Notification";
 import API_ENDPOINTS from "../../../constant/backend-endpoints";
 import SaleCard from "./SaleItem";
 import { Sale } from "../../../model/SaleResponse";
 
 export default function ManageOrder() {
-    const [phoneNumber, setphoneNumber] = useState<string>();
     const [loading, setLoading] = useState<boolean>(false);
     const [saleData, setSaleData] = useState<Sale[]>([]);
 
@@ -38,47 +36,25 @@ export default function ManageOrder() {
         fetchData();
     }, []);
 
-
-    const checkCustomer = async () => {
-        if (phoneNumber) {
-            // fetchData();
-        } else {
-            showNotification(
-                "error",
-                "Check",
-                "Input valid Phone Number"
-            );
-        }
-    }
-
-    const handleCancelOrder = (orderItemId: number) => {
-        // Implement cancel order logic
-        console.log('Cancel order:', orderItemId);
-        alert(`Order ${orderItemId} cancelled!`);
-    };
-
-    const handleSellOrder = (orderItemId: number) => {
-        // Implement sell order logic
-        console.log('Sell order:', orderItemId);
-        alert(`Order ${orderItemId} sold!`);
-    };
-
     return (
         <div className="p-[10px]">
             <div>
                 <h2 className="text-[2rem] font-semibold font-sans">විකුණුම් ආයිතමයන් (Product)</h2>
             </div>
-            <div className="w-[100%] mt-1 md:w-[30%]">
-                <Space.Compact style={{
-                    width: '100%',
-                }}>
-                    <Input onChange={(e) => { setphoneNumber(e.target.value) }} placeholder='Check Phone Number' />
-                    <Button onClick={() => { checkCustomer() }} type="primary">Submit</Button>
-                </Space.Compact>
+            <div className="flex items-center justify-between mt-4">
+                <div className="w-[100%] mt-1 md:w-[30%]">
+                    <Space.Compact style={{
+                        width: '100%',
+                    }}>
+                        <Input placeholder='ගණුදුනුකරුගේ නම ඇතුලත් කරන්න' />
+                        <Button type="primary">Submit</Button>
+                    </Space.Compact>
+                </div>
+                <DatePicker size="middle" placeholder='දවස තෝරන්න' onChange={(date, dateString) => { }} />
             </div>
             <div className="overflow-y-auto max-h-[28rem]">
                 {saleData.map((item, index) => (
-                       <SaleCard key={index} sale={item} />
+                    <SaleCard key={index} sale={item} />
                 ))}
             </div>
         </div>
