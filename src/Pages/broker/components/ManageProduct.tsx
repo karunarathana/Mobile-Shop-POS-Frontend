@@ -7,6 +7,7 @@ import ProductTable from '../function/ProductTable';
 import { ReloadOutlined } from '@ant-design/icons';
 import { viewAllProduct } from '../../../service/ManageAccessory.service';
 import { ProductType } from '../../../model/BaseCreateProduct';
+import { viewAllCategory } from '../../../service/CreateCategory.service';
 
 const { Search } = Input;
 
@@ -24,9 +25,12 @@ export default function ManageProduct() {
   const fetchData = async () => {
     setLoading(true);
     try {
+      const categoryResponse = await viewAllCategory();
       const response = await viewAllProduct("Mobile Phone");
       setData(response.data.data);
       setFilteredData(response.data.data);
+      console.log("Category Response",categoryResponse.data.data);
+      
     } catch (error) {
       console.error('Failed to fetch Product:', error);
     } finally {

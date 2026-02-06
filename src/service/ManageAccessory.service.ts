@@ -72,6 +72,29 @@ export const updateAccessoryProduct = async (values: any): Promise<AxiosResponse
   }
 };
 
+export const updatePhoneProduct = async (values: any): Promise<AxiosResponse<BaseproductResponse>> => {
+  console.log('Form Values:', values);
+  try {
+    const response = await axios.post<BaseproductResponse>(
+      API_ENDPOINTS.UPDATE_PHONE_PRODUCT,
+      values,
+    );
+
+    console.log("**********************************");
+    console.log("API Call Started In updateProduct");
+    console.log("**********************************");
+    console.log("API Response:", response.data);
+    console.log("API Call Finished In updateProduct");
+    console.log("**********************************");
+
+    return response;
+
+  } catch (error: any) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
 export const viewAllProduct = async (type: string): Promise<AxiosResponse<BaseproductResponse>> => {
   try {
     const response = await axios.get<BaseproductResponse>(

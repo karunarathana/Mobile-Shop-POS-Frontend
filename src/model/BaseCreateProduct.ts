@@ -44,9 +44,6 @@ export interface AccessoryType {
   product?: ProductType; // optional because @JsonIgnore
 }
 
-
-
-
 interface BaseproductResponse {
   data: ProductType[];
   msg: string;
@@ -56,27 +53,25 @@ interface BaseproductResponse {
 export default BaseproductResponse;
 
 
-export interface UpdateProductDrawerProps {
+export interface UpdatePhoneDrawerProps {
   productId: number;
   phoneId?: number;
   productName: string;
-  brand: string | undefined;
-  model: string | undefined;
+  brand?: string;
+  model?: string;
+  imeiNumber?: string;
+  color?: string;
+  storageCapacity?: string;
+  condition?: "NEW" | "USED";
   purchasePrice: number;
   sellingPrice: number;
-  categoryId: number | undefined;
+  categoryId?: number;
   discountPercentage?: number;
-  status: string;
-  rackId: string | undefined;
-  type: string;
-  compatibleWith: string | undefined;
-  color: string | undefined;
-  imeiNumber: string | undefined;
-  condition: "NEW" | "USED" | undefined;
-  storageCapacity: string | undefined;
+  status: "ACTIVE" | "INACTIVE";
   quantityInStock: number;
   refreshTable: () => void;
 }
+
 
 export interface UpdateProductAccessoryDrawerProps {
   productId: number;

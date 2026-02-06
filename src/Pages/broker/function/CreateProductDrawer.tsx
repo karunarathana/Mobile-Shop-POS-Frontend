@@ -8,6 +8,11 @@ interface createproductProps {
     refreshTable: () => void;
 }
 
+const categories = [
+    { categoryId: 1, name: "Battery" },
+    { categoryId: 2, name: "Mobile Phone" }
+];
+
 const CreateProductDrawer: React.FC<createproductProps> = ({ refreshTable }) => {
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
@@ -20,27 +25,29 @@ const CreateProductDrawer: React.FC<createproductProps> = ({ refreshTable }) => 
 
     const onFinish = async (values: any) => {
         console.log('Form Values:', values);
-        const productDto = {
+        const phoneDto = {
             productName: values.name,
             purchasePrice: values.purchasePrice,
             sellingPrice: values.sellingPrice,
             stock: values.quantityInStock,
-            status: "ACTIVE",
+            status: values.staus,
             discountPercentage: values.discount,
-            type: "Mobile Phone",
+            type: values.categoryId.name,
             phoneDto: {
                 brand: values.brand,
-                model: "Hi",
+                model: values.modal,
                 imeiNumber: values.imeiNumber,
                 color: values.color,
                 storageCapacity: values.storageCapacity,
-                condition: "NEW",
-                categoryId:1,
+                condition: values.condition,
+                categoryId: values.categoryId,
                 createBy: "admin",
             },
         };
+        console.log("Phone DTO ",phoneDto);
+        
         try {
-            const response = await createProduct(productDto);
+            const response = await createProduct(phoneDto);
             console.log(response);
             if (response.data.msg === "Save Product Successfully" && response.data.statusCode === "201") {
                 showNotification(
@@ -109,8 +116,8 @@ const CreateProductDrawer: React.FC<createproductProps> = ({ refreshTable }) => 
                                 <Select
                                     placeholder="කාණ්ඩය උපාංග තත්වය තෝරන්න"
                                     options={[
-                                        { value: 'STOCK', label: 'IN-STOCK' },
-                                        { value: 'OUTSTOCK', label: 'OUT-STOCK' },
+                                        { value: 'ACTIVE', label: 'IN-STOCK' },
+                                        { value: 'INACTIVE', label: 'OUT-STOCK' },
                                     ]}
                                 />
                             </Form.Item>
@@ -123,7 +130,13 @@ const CreateProductDrawer: React.FC<createproductProps> = ({ refreshTable }) => 
                                 label="උපාංගයේ කාණ්ඩය"
                                 rules={[{ required: true, message: 'කරුණාකර උපාංගයේ කාණ්ඩය ඇතුලත් කරන්න' }]}
                             >
-                                <Input type={"text"} placeholder="කරුණාකර උපාංගයේ කාණ්ඩය සදහන් කරන්න" />
+                                <Select
+                                    placeholder="කරුණාකර උපාංගයේ කාණ්ඩය සදහන් කරන්න"
+                                    options={categories.map(cat => ({
+                                        label: cat.name,     
+                                        value: cat.categoryId   
+                                    }))}
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -222,6 +235,15 @@ const CreateProductDrawer: React.FC<createproductProps> = ({ refreshTable }) => 
                             </Col>
                         </Row>
                         <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="modal"
+                                    label="උපාංගයේ මොඩල් නම (Model)"
+                                    rules={[{ required: true, message: 'කරුණාකර උපාංගයේ මොඩල් නම ඇතුලත් කරන්න' }]}
+                                >
+                                    <Input type={"text"} placeholder="කරුණාකර උපාංගයේ මොඩල් නම සදහන් කරන්න" />
+                                </Form.Item>
+                            </Col>
                             <Col span={12}>
                                 <Form.Item
                                     name="quantityInStock"

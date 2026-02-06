@@ -6,6 +6,7 @@ import UpdateProductDrawer from '../subviews/UpdateProductDrawer';
 import { ProductType } from '../../../model/BaseCreateProduct';
 import { deleteProduct } from '../../../service/ManageAccessory.service';
 import { showNotification } from '../components/Notification';
+import UpdatePhoneDrawer from '../subviews/UpdatePhoneDrawer';
 
 interface CustomerTableProps {
     tableData: ProductType[];
@@ -139,23 +140,25 @@ const ProductTable: React.FC<CustomerTableProps> = ({
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <UpdateProductDrawer
+                    <UpdatePhoneDrawer
                         productId={record.productId}
                         phoneId={record.phone?.phoneId}
                         productName={record.productName}
-                        brand={record.phone?.brand}
-                        model={record.phone?.model}
                         purchasePrice={record.purchasePrice}
                         sellingPrice={record.sellingPrice}
-                        categoryId={record.phone?.categoryId.categoryId}
                         discountPercentage={record.discountPercentage}
                         status={record.status}
-                        color={record.phone?.color}
-                        imeiNumber={record.phone?.imeiNumber}
-                        condition={record.phone?.condition}
-                        storageCapacity={record.phone?.storageCapacity}
                         quantityInStock={record.stock}
                         refreshTable={refreshTable}
+
+                        /* Phone specific */
+                        condition={record.phone?.condition}
+                        brand={record.phone?.brand}
+                        model={record.phone?.model}
+                        imeiNumber={record.phone?.imeiNumber}
+                        color={record.phone?.color}
+                        storageCapacity={record.phone?.storageCapacity}
+                        categoryId={record.phone?.categoryId?.categoryId}
                     />
                     <ConfirmDelete
                         onConfirm={() => handleDelete(record.productId, refreshTable)}

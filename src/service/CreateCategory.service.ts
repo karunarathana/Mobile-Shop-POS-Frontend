@@ -93,3 +93,23 @@ export const deleteCategory = async (
 
   }
 };
+
+export const viewAllCategory = async (): Promise<AxiosResponse<CategoryResponse>> => {
+  try {
+    const response = await axios.get<CategoryResponse>(
+      API_ENDPOINTS.VIEW_ALL_CATEGORY,
+    );
+
+    console.log("**********************************");
+    console.log("API Call Started In viewAllCategory");
+    console.log("**********************************");
+    console.log("API Response:", response.data);
+    console.log("API Call Finished In viewAllCategory");
+    console.log("**********************************");
+
+    return response;
+  } catch (error: any) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};

@@ -53,8 +53,8 @@ export default function Broker() {
                 <div className='left_wrapper w-[25%]  bg-white h-[100%] rounded-tl-2xl rounded-bl-2xl'>
                     <div className='sidebar_main_wrapper h-[100%]'>
                         <div className='text-gray-600 flex flex-col items-center justify-center '>
-                            <p className='text-[1rem] md:text-[2rem] text-center font-bold'>Diyadahara</p>
-                            <p className='text-[1rem] md:text-[2rem] text-center font-bold'>Resort</p>
+                            <p className='text-[1rem] md:text-[2.5rem] text-center font-bold'>මශීෂ</p>
+                            <p className='text-[1rem] md:text-[2rem] text-center font-bold'>Mobile</p>
                         </div>
                         <div className='flex flex-col gap-3.5 px-[20px] mt-4'>
                             <div onClick={() => { setRedirectPage("mainBoard") }} className='flex items-center gap-3 h-[2.4em] bg-blue-300 cursor-pointer rounded-lg hover:bg-slate-100 px-[10px]'>
@@ -95,7 +95,7 @@ export default function Broker() {
                             </div>
 
                         </div>
-                        <div className='text-center'>
+                        <div className='text-center mt-1'>
                             {/* <img className='w-[100px] mx-auto' src={logo} alt="" /> */}
                             <p className='text-gray-400'>Made In NSK Technology</p>
                         </div>

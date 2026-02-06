@@ -2,15 +2,14 @@ import { Button, Input, Space } from "antd"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { showNotification } from "./Notification";
-import notFound from '../../../assets/Logo/notfound.jpg'
 import API_ENDPOINTS from "../../../constant/backend-endpoints";
 import SaleCard from "./SaleItem";
-import { SaleItem } from "../../../model/SaleResponse";
+import { Sale } from "../../../model/SaleResponse";
 
 export default function ManageOrder() {
     const [phoneNumber, setphoneNumber] = useState<string>();
     const [loading, setLoading] = useState<boolean>(false);
-    const [saleData, setSaleData] = useState<SaleItem[]>([]);
+    const [saleData, setSaleData] = useState<Sale[]>([]);
 
     // Fetch data from backend
     const fetchData = async () => {
@@ -42,7 +41,7 @@ export default function ManageOrder() {
 
     const checkCustomer = async () => {
         if (phoneNumber) {
-            fetchData();
+            // fetchData();
         } else {
             showNotification(
                 "error",
@@ -51,7 +50,7 @@ export default function ManageOrder() {
             );
         }
     }
-  
+
     const handleCancelOrder = (orderItemId: number) => {
         // Implement cancel order logic
         console.log('Cancel order:', orderItemId);
@@ -67,7 +66,7 @@ export default function ManageOrder() {
     return (
         <div className="p-[10px]">
             <div>
-                <h2 className="text-[2rem] font-semibold font-sans">Order Management</h2>
+                <h2 className="text-[2rem] font-semibold font-sans">විකුණුම් ආයිතමයන් (Product)</h2>
             </div>
             <div className="w-[100%] mt-1 md:w-[30%]">
                 <Space.Compact style={{
@@ -77,9 +76,9 @@ export default function ManageOrder() {
                     <Button onClick={() => { checkCustomer() }} type="primary">Submit</Button>
                 </Space.Compact>
             </div>
-            <div className="mt-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 overflow-y-auto max-h-[28rem]">
-                {saleData.map(item => (
-                    <SaleCard key={item.saleItemId} item={item} />
+            <div className="overflow-y-auto max-h-[28rem]">
+                {saleData.map((item, index) => (
+                       <SaleCard key={index} sale={item} />
                 ))}
             </div>
         </div>

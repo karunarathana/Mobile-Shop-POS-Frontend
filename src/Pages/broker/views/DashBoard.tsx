@@ -190,7 +190,6 @@ export default function DashBoard() {
         };
 
         console.log("Sale DTO:", saleDto);
-
         try {
             await createSale(saleDto);
 
