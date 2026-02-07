@@ -172,9 +172,13 @@ export default function DashBoard() {
             return;
         }
 
-        // ✅ Build sale items locally
+         const totalAmount = cartItems.reduce(
+            (total, item) => total + item.sellingPrice * item.quantity,
+            0
+        ).toFixed(2);
+
         const saleItemsDto = cartItems.map(item => ({
-            productType:"MOBILE",
+            productType: "MOBILE",
             productId: item.productId,
             quantity: item.quantity,
             unitPrice: item.sellingPrice,
@@ -183,7 +187,7 @@ export default function DashBoard() {
         }));
 
         const saleDto = {
-            totalAmount: 145000, // (or calculate from cart)
+            totalAmount: totalAmount, // (or calculate from cart)
             paymentMethod: "CASH",
             paymentStatus: "PAID",
             customerId: customerId,
@@ -200,7 +204,6 @@ export default function DashBoard() {
                 "Order එක සාර්ථකව සෑදුවා"
             );
 
-            // ✅ Clear states
             setCartItems([]);
             setSaleItem([]);
 

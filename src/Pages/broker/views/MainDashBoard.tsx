@@ -5,6 +5,7 @@ import {
     Users,
     DollarSign,
     TrendingUp,
+    TrendingDown,
     Package,
     Clock,
     CheckCircle,
@@ -21,10 +22,9 @@ function MainDashBoard() {
     const [stats, setStats] = useState({
         totalOrders: 156,
         completedOrders: 128,
-        pendingOrders: 28,
         totalRevenue: 245800,
         activeCustomers: 42,
-        todayOrders: 18
+        totalExpensive: 18
     });
     const [expenses, setExpenses] = useState<ExpensesResponseType[]>([]
     );
@@ -149,8 +149,14 @@ function MainDashBoard() {
                         trend="+5%"
                     />
                     <StatCard
-                        title="Today's Orders"
-                        value={stats.todayOrders}
+                        title="Today's Expensive"
+                        value={`Rs. ${stats.totalExpensive.toLocaleString()}`}
+                        icon={TrendingDown}
+                        color="text-orange-600"
+                    />
+                     <StatCard
+                        title="Today's Repairs"
+                        value={stats.completedOrders}
                         icon={TrendingUp}
                         color="text-orange-600"
                     />
@@ -196,8 +202,7 @@ function MainDashBoard() {
                     </div>
 
                     {/* Right Column - Order Status */}
-                    <div className="space-y-6">
-                        {/* Order Status */}
+                    {/* <div className="space-y-6">
                         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                             <h2 className="text-xl font-bold text-gray-900 mb-6">Order Status</h2>
                             <div className="space-y-4">
@@ -221,7 +226,7 @@ function MainDashBoard() {
                                 />
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Bottom Section */}

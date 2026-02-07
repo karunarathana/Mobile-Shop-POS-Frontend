@@ -7,7 +7,7 @@ export interface DashboardResponse {
     pendingOrders: number;
     totalRevenue: number;
     activeCustomers: number;
-    todayOrders: number;
+    totalExpensive: number;
 }
 
 export interface DashboardStats {
@@ -16,7 +16,7 @@ export interface DashboardStats {
     pendingOrders: number;
     totalRevenue: number;
     activeCustomers: number;
-    todayOrders: number;
+    totalExpensive: number;
 }
 
 export const callDashBoard = async (): Promise<DashboardStats> => {
@@ -38,7 +38,7 @@ export const callDashBoard = async (): Promise<DashboardStats> => {
             pendingOrders: response.data.pendingOrders,
             totalRevenue: response.data.totalRevenue,
             activeCustomers: response.data.activeCustomers,
-            todayOrders: response.data.todayOrders,
+            totalExpensive: response.data.totalExpensive,
         };
         return statsObj;
     } catch (error: any) {

@@ -92,7 +92,7 @@ export default function Broker() {
                             </div>
                             <div onClick={() => { setRedirectPage("profile") }} className='flex items-center gap-3 h-[2.4em] cursor-pointer hover:bg-slate-100 px-[10px]'>
                                 <img className='w-[30px]' src={account} alt="" />
-                                <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Account</p>
+                                <p className='hidden md:flex text-[1.1rem] text-gray-500 font-semibold'>Repair</p>
                             </div>
 
                         </div>

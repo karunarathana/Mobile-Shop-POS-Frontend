@@ -9,8 +9,8 @@ interface createproductProps {
 }
 
 const categories = [
-    { categoryId: 1, name: "Battery" },
-    { categoryId: 2, name: "Mobile Phone" }
+    { categoryId: 2, name: "Battery" },
+    { categoryId: 1, name: "Mobile Phone" }
 ];
 
 const CreateProductDrawer: React.FC<createproductProps> = ({ refreshTable }) => {

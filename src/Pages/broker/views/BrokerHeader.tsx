@@ -3,13 +3,18 @@ import profilepic from '../../../assets/Logo/diyadahara.png'
 import setting from '../../../assets/Dashboard/settings.png'
 import notify from '../../../assets/Dashboard/bell.png'
 import search from '../../../assets/Dashboard/search (1).png'
+import { DownloadOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
 export default function BrokerHeader() {
     return (
         <div className='header_main_wrapper h-[4em] bg-white rounded-tr-2xl flex items-center justify-between px-[15px]'>
 
-            <div>
+            <div className='flex gap-[15px] items-center'>
                 <h1 className='text-[1.8rem] font-semibold text-gray-600'>Overview</h1>
+                <Button type="primary" icon={<DownloadOutlined />} size="small">
+                    Bill Download
+                </Button>
             </div>
             <div className='flex gap-[15px] items-center'>
                 <div className='hidden md:flex'>
