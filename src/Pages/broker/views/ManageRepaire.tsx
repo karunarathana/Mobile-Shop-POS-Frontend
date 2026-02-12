@@ -6,7 +6,7 @@ import { viewCustomerRepire } from "../../../service/ManageRepaire.service";
 import RepairCard from "../components/RepireItem";
 
 export default function ManageRepaire() {
-    const [loading, setLoading] = useState<boolean>(false);
+    // const [loading, setLoading] = useState<boolean>(false);
     const [repairs, setRepairs] = useState<RepaireType[]>([]);
 
     // Fetch data from backend
@@ -43,7 +43,7 @@ export default function ManageRepaire() {
                     </div>
                     <CreateRepaireDrawer refreshTable={fetchData} />
                 </div>
-                <DatePicker size="middle" placeholder='දවස තෝරන්න' onChange={(date, dateString) => { }} />
+                <DatePicker size="middle" placeholder='දවස තෝරන්න'/>
             </div>
             <div className=" mt-2 overflow-y-auto max-h-[28rem]">
                 {repairs.map((repair) => (

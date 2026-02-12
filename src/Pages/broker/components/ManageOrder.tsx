@@ -50,7 +50,12 @@ export default function ManageOrder() {
                         <Button type="primary">Submit</Button>
                     </Space.Compact>
                 </div>
-                <DatePicker size="middle" placeholder='දවස තෝරන්න' onChange={(date, dateString) => { }} />
+                <DatePicker size="middle" placeholder='දවස තෝරන්න' onChange={(date, dateString) => { 
+                    console.log(date);
+                    console.log(dateString);
+                    
+                    
+                }} />
             </div>
             <div className="overflow-y-auto max-h-[28rem]">
                 {saleData.map((item, index) => (

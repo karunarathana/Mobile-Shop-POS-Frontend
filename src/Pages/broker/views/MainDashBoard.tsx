@@ -81,20 +81,20 @@ function MainDashBoard() {
         </div>
     );
 
-    const OrderStatusCard = ({ status, count, color, icon: Icon }: any) => (
-        <div className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-            <div className={`p-3 rounded-lg ${color} bg-opacity-10 mr-4 rounded-full bg-blue-600`}>
-                <Icon className={`h-5 w-5 ${color}`} />
-            </div>
-            <div>
-                <p className="text-sm text-gray-500">{status}</p>
-                <p className="text-xl font-bold text-gray-800">{count}</p>
-            </div>
-        </div>
-    );
+    // const OrderStatusCard = ({ status, count, color, icon: Icon }: any) => (
+    //     <div className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+    //         <div className={`p-3 rounded-lg ${color} bg-opacity-10 mr-4 rounded-full bg-blue-600`}>
+    //             <Icon className={`h-5 w-5 ${color}`} />
+    //         </div>
+    //         <div>
+    //             <p className="text-sm text-gray-500">{status}</p>
+    //             <p className="text-xl font-bold text-gray-800">{count}</p>
+    //         </div>
+    //     </div>
+    // );
 
     async function handleDelete(eId: number): Promise<void> {
-        const response = await deleteExpenses(eId);
+        await deleteExpenses(eId);
         const expensesResponse = await viewAllTodayExpenses();
         setExpenses(expensesResponse.data.data)
     }
@@ -180,7 +180,10 @@ function MainDashBoard() {
                             <div className="flex justify-between items-center mb-2">
                                 <h2 className="text-[1.8rem] font-bold text-gray-900">දවසේ වියදම්</h2>
                                 <DatePicker size="middle" placeholder='දවස තෝරන්න' onChange={(date, dateString) => {
-
+                                    console.log(date);
+                                    console.log(dateString);
+                                    
+                                    
                                 }} />
                             </div>
                             <div className="space-y-4">

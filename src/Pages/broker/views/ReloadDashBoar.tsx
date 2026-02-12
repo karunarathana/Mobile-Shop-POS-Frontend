@@ -211,8 +211,9 @@ export default function ReloadDashboard() {
                         </Button>
                     </div>
                     <DatePicker size="middle" placeholder='දවස තෝරන්න' onChange={(date, dateString) => {
-                            fetchPreviouseReloadData(dateString || "");
-                        }} />
+                        console.log(date);
+                        fetchPreviouseReloadData(dateString || "");
+                    }} />
                 </div>
             </div>
 

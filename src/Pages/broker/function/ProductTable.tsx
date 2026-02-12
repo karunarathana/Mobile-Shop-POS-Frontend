@@ -2,7 +2,6 @@ import React from 'react';
 import { Table, Space, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import ConfirmDelete from '../components/Confirmation';
-import UpdateProductDrawer from '../subviews/UpdateProductDrawer';
 import { ProductType } from '../../../model/BaseCreateProduct';
 import { deleteProduct } from '../../../service/ManageAccessory.service';
 import { showNotification } from '../components/Notification';

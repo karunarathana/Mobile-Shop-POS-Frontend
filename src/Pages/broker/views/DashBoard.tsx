@@ -44,6 +44,8 @@ export default function DashBoard() {
 
     // Fetch data from backend
     const fetchData = async (type: string) => {
+        console.log(saleItem);
+        
         setLoading(true);
         try {
             const response = await axios.get(API_ENDPOINTS.VIEW_ALL_CATEGORY);

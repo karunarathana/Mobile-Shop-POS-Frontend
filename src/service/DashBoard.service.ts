@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import API_ENDPOINTS from "../constant/backend-endpoints";
 
 export interface DashboardResponse {

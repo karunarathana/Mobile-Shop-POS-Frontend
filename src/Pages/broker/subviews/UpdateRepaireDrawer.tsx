@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from "antd";
-import { showNotification } from "../components/Notification";
-import { getSingleCustomer } from "../../../service/CreateCustomer.service";
-import { createRepaire } from "../../../service/ManageRepaire.service";
 import { RepaireType } from "../../../model/BaseRepaireResponse";
+import { showNotification } from "../components/Notification";
+import { createRepaire } from "../../../service/ManageRepaire.service";
 
 
 interface CreateRepairDrawerProps {
@@ -33,26 +32,26 @@ const UpdateRepairDrawer: React.FC<CreateRepairDrawerProps> = ({ refreshTable,re
 
         console.log("Update DTO => ", updateDto);
 
-        // try {
-        //     const res = await createRepaire(repairDto);
+        try {
+            const res = await createRepaire(updateDto);
 
-        //     console.log(res);
+            console.log(res);
 
 
-        //     showNotification(
-        //         "success",
-        //         "සාර්ථකයි",
-        //         "Repair Job එක සාර්ථකව ඇතුළත් කරන ලදි"
-        //     );
-        //     refreshTable();
-        //     setOpen(false);
-        // } catch (error: any) {
-        //     showNotification(
-        //         "error",
-        //         "Error",
-        //         error.response?.data?.message || "Something went wrong"
-        //     );
-        // }
+            showNotification(
+                "success",
+                "සාර්ථකයි",
+                "Repair Job එක සාර්ථකව ඇතුළත් කරන ලදි"
+            );
+            refreshTable();
+            setOpen(false);
+        } catch (error: any) {
+            showNotification(
+                "error",
+                "Error",
+                error.response?.data?.message || "Something went wrong"
+            );
+        }
     };
 
     return (

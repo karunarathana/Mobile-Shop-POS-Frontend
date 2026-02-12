@@ -10,6 +10,9 @@ interface Props {
 const RepairCard: React.FC<Props> = ({ repair,onCompleteRepair }) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
+  console.log(onCompleteRepair,setIsDeleting);
+  
+
   // Format date function
   const formatDate = (dateString?: string) => {
     if (!dateString) return "N/A";
