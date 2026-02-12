@@ -1,18 +1,33 @@
 
-import profilepic from '../../../assets/Logo/diyadahara.png'
+import profilepic from '../../../assets/Logo/logoOne.png'
 import setting from '../../../assets/Dashboard/settings.png'
 import notify from '../../../assets/Dashboard/bell.png'
 import search from '../../../assets/Dashboard/search (1).png'
 import { DownloadOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
+import { genarateBill } from '../../../service/ReportGenarate.service';
+import { showNotification } from '../components/Notification';
 
 export default function BrokerHeader() {
+    const downloadBill = async () => {
+        try {
+            const response = await genarateBill();
+            console.log(response);
+            if (response.data === "PDF saved successfully") {
+                showNotification("success", "Bill Downloaded", "Your bill has been downloaded successfully.");
+            }
+        } catch (error) {
+            console.error("Error downloading bill:", error);
+            showNotification("error", "Failed to download bill. Please try again later.", "error");
+        }
+        console.log("Downloading bill...");
+    }
     return (
         <div className='header_main_wrapper h-[4em] bg-white rounded-tr-2xl flex items-center justify-between px-[15px]'>
 
             <div className='flex gap-[15px] items-center'>
                 <h1 className='text-[1.8rem] font-semibold text-gray-600'>Overview</h1>
-                <Button type="primary" icon={<DownloadOutlined />} size="small">
+                <Button type="primary" icon={<DownloadOutlined />} size="small" onClick={downloadBill}>
                     Bill Download
                 </Button>
             </div>

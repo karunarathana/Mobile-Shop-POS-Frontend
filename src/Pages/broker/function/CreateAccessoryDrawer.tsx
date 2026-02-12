@@ -1,19 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Drawer, Form, Input, Row, Select, Space } from 'antd';
 import { createAccessoryProduct } from '../../../service/ManageAccessory.service';
 import { showNotification } from '../components/Notification';
+import { viewAllCategory } from '../../../service/CreateCategory.service';
 
 interface createproductProps {
     refreshTable: () => void;
 }
 
 const CreateAccessoryDrawer: React.FC<createproductProps> = ({ refreshTable }) => {
+    const [categories, setCategories] = useState<{ categoryId: number; name: string }[]>([]); 
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await viewAllCategory();
+                console.log(response.data);
+                setCategories(response.data.data);
+            } catch (error) {
+                console.error("Failed to fetch categories:", error);
+            }
+        };
+        fetchCategories();
+    }, []);
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
         setOpen(true);
     };
-
+   
     const onClose = () => {
         setOpen(false);
     };
@@ -27,16 +42,18 @@ const CreateAccessoryDrawer: React.FC<createproductProps> = ({ refreshTable }) =
             stock: values.quantity,
             status: values.status,
             discountPercentage: values.discountPercentage,
-            type: "Battery",
+            type: values.type,
             accessoryDto: {
                 rackId: values.rackId,
                 brand: values.brand,
                 color: values.color,
                 compatibleWith: values.compatibleWith,
-                categoryId: 1,
+                categoryId: values.categoryId,
                 createBy: "admin",
             },
         };
+        console.log("Accessory DTO ",AccessoryDto);
+        
         try {
             const response = await createAccessoryProduct(AccessoryDto);
             console.log(response);
@@ -137,10 +154,16 @@ const CreateAccessoryDrawer: React.FC<createproductProps> = ({ refreshTable }) =
                         <Col span={12}>
                             <Form.Item
                                 name="type"
-                                label="Accessory Type"
-                                rules={[{ required: true }]}
+                                label="උපාංගයේ වර්ගය (Type)"
+                                rules={[{ required: true, message: 'කරුණාකර උපාංගයේ වර්ගය ඇතුලත් කරන්න' }]}
                             >
-                                <Input />
+                                <Select
+                                    placeholder="කරුණාකර උපාංගයේ වර්ගය සදහන් කරන්න"
+                                    options={categories.map(cat => ({
+                                        label: cat.name,
+                                        value: cat.name
+                                    }))}
+                                />
                             </Form.Item>
                         </Col>
 
@@ -180,10 +203,16 @@ const CreateAccessoryDrawer: React.FC<createproductProps> = ({ refreshTable }) =
                         <Col span={12}>
                             <Form.Item
                                 name="categoryId"
-                                label="Category ID"
-                                rules={[{ required: true }]}
+                                label="උපාංගයේ කාණ්ඩය"
+                                rules={[{ required: true, message: 'කරුණාකර උපාංගයේ කාණ්ඩය ඇතුලත් කරන්න' }]}
                             >
-                                <Input type="number" />
+                                <Select
+                                    placeholder="කරුණාකර උපාංගයේ කාණ්ඩය සදහන් කරන්න"
+                                    options={categories.map(cat => ({
+                                        label: cat.name,
+                                        value: cat.categoryId
+                                    }))}
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={12}>

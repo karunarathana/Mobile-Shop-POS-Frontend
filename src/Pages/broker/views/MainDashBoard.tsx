@@ -16,15 +16,16 @@ import { deleteExpenses, viewAllTodayExpenses } from "../../../service/ManageExp
 import { ExpensesResponseType } from "../../../model/BaseExpensesResponse";
 import { callDashBoard } from "../../../service/DashBoard.service";
 import { DatePicker } from "antd";
+import { showNotification } from "../components/Notification";
 
 function MainDashBoard() {
     const [loadBar, setLoadBar] = useState(true);
     const [stats, setStats] = useState({
-        totalOrders: 156,
-        completedOrders: 128,
-        totalRevenue: 245800,
-        activeCustomers: 42,
-        totalExpensive: 18
+        totalOrders: 0,
+        completedOrders: 0,
+        totalRevenue: 0,
+        activeCustomers: 0,
+        totalExpensive: 0
     });
     const [expenses, setExpenses] = useState<ExpensesResponseType[]>([]
     );
@@ -36,8 +37,16 @@ function MainDashBoard() {
             const expensesResponse = await viewAllTodayExpenses();
             setStats(response);
             setExpenses(expensesResponse.data.data)
-        } catch (error) {
-            console.error('Failed to fetch customers:', error);
+        } catch (error: any) {
+            if (error.message === "Network Error") {
+                showNotification(
+                    "error",
+                    "දෝෂයක් (Error)",
+                    "කරුණාකර ඔබගේ අන්තර්ජාල සම්බන්ධතාවය පරීක්ෂා කරන්න."
+                );
+            } else {
+                console.error('Failed to fetch customers:', error);
+            }
         }
     };
 
@@ -97,6 +106,7 @@ function MainDashBoard() {
             </div>
 
             <div className={loadBar ? 'hidden' : 'p-6 max-h-[78vh] overflow-y-auto'}>
+                {/* <LoginModal showLogin={true} /> */}
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between bg-white rounded-2xl p-4">
@@ -124,7 +134,6 @@ function MainDashBoard() {
                         </div>
                     </div>
                 </div>
-
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <StatCard
@@ -154,7 +163,7 @@ function MainDashBoard() {
                         icon={TrendingDown}
                         color="text-orange-600"
                     />
-                     <StatCard
+                    <StatCard
                         title="Today's Repairs"
                         value={stats.completedOrders}
                         icon={TrendingUp}

@@ -10,6 +10,9 @@ interface CustomerTableProps {
 }
 const CreateReloadDrawer: React.FC<CustomerTableProps> = ({ reloadTable }) => {
   const [open, setOpen] = useState(false);
+  const [reloadPrice, setReloadPrice] = useState<number>(0);
+  const [givePrice, setGivePrice] = useState<number>(0);
+
   const [form] = Form.useForm();
   const showDrawer = () => {
     setOpen(true);
@@ -93,7 +96,21 @@ const CreateReloadDrawer: React.FC<CustomerTableProps> = ({ reloadTable }) => {
                   { required: true, message: 'කරුණාකර ගණුදෙනුකරුගේ රිලෝඩ් වටිනාක ඇතුලත් කරන්න' },
                 ]}
               >
-                <Input placeholder="ගණුදෙනුකරුගේ රිලෝඩ් වටිනාක ඇතුලත් කරන්න" />
+                <Input type={"number"} onChange={(e)=>{setReloadPrice(Number(e.target.value))}} placeholder="ගණුදෙනුකරුගේ රිලෝඩ් වටිනාක ඇතුලත් කරන්න" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="givePrice"
+                label="ලබා ගත් මුදල (Give Price)"
+                style={{ width: '400px' }}
+                rules={[
+                  { required: true, message: 'කරුණාකර ගණුදෙනුකරු ලබා දුන් මුදල ඇතුලත් කරන්න' },
+                ]}
+              >
+                <Input type={"number"} onChange={(e)=>{setGivePrice(Number(e.target.value))}} placeholder="ගණුදෙනුකරු ලබා දුන් මුදල ඇතුලත් කරන්න " />
               </Form.Item>
             </Col>
           </Row>
@@ -111,7 +128,7 @@ const CreateReloadDrawer: React.FC<CustomerTableProps> = ({ reloadTable }) => {
                     { value: 'dialog', label: 'Dialog' },
                     { value: 'hutch', label: 'Hutch' },
                     { value: 'mobitel', label: 'Mobitel' },
-                    { value: 'aitel', label: 'Aitel' },
+                    { value: 'airtel', label: 'Airtel' },
                   ]}
                 />
               </Form.Item>
@@ -135,6 +152,7 @@ const CreateReloadDrawer: React.FC<CustomerTableProps> = ({ reloadTable }) => {
               </Form.Item>
             </Col>
           </Row>
+          <p className='text-[1rem] font-bold'>ගණුදෙනුකරුට ලබා දිය යුතු ඉතිරි මුදල <span className='text-red-600'>රු {givePrice - reloadPrice}.00</span></p>
           <Row gutter={16}>
             <Form.Item label={null}>
               <Button className='mt-4 w-[210px]' type="primary" htmlType="submit">

@@ -172,7 +172,7 @@ export default function DashBoard() {
             return;
         }
 
-         const totalAmount = cartItems.reduce(
+        const totalAmount = cartItems.reduce(
             (total, item) => total + item.sellingPrice * item.quantity,
             0
         ).toFixed(2);
@@ -337,7 +337,7 @@ export default function DashBoard() {
                                 </Space.Compact>
                             </div>
                             <div className='flex justify-between'>
-                                <h3 className="text-lg font-semibold mt-4">Total:</h3>
+                                <h3 className="text-lg font-semibold mt-4">මුදල:</h3>
                                 <h3 className="text-lg font-semibold mt-4">Rs.
                                     {cartItems.reduce(
                                         (total, item) => total + item.sellingPrice * item.quantity,
@@ -347,14 +347,18 @@ export default function DashBoard() {
                                 </h3>
                             </div>
                             <div className='flex justify-between mt-[-1rem]'>
-                                <h3 className="text-lg font-semibold mt-4">Customer:</h3>
-                                <h3 className="text-lg font-semibold mt-4">Rs.
-                                    {cartItems.reduce(
-                                        (total, item) => total + item.sellingPrice * item.quantity - (calculateReturnMoney || 0),
-                                        0
-                                    ).toFixed(2)}
-
+                                <h3 className="text-lg font-semibold mt-4">ඉතිරි:</h3>
+                                <h3 className="text-lg font-semibold mt-4">
+                                    Rs. {
+                                        (
+                                            cartItems.reduce(
+                                                (total, item) => total + item.sellingPrice * item.quantity,
+                                                0
+                                            ) - (calculateReturnMoney || 0)
+                                        ).toFixed(2)
+                                    }
                                 </h3>
+
                             </div>
                         </div>
                         <div>

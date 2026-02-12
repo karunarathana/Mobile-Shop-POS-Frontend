@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, Descriptions } from 'antd';
+import {Modal, Descriptions } from 'antd';
 
 interface ProductDescribeModalProps {
   product: any; // later you can replace with Product interface

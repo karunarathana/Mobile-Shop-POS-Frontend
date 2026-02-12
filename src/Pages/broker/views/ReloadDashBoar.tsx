@@ -20,6 +20,7 @@ export default function ReloadDashboard() {
     const [mobitelPrice, setMobitelPrice] = useState<number>(0);
     const [hutchPrice, setHutchPrice] = useState<number>(0);
     const [airtelPrice, setAirtelPrice] = useState<number>(0);
+    const [totalPrice, setTotalPrice] = useState<number>(0);
 
 
 
@@ -54,6 +55,7 @@ export default function ReloadDashboard() {
         setMobitelPrice(mobitel);
         setHutchPrice(hutch);
         setAirtelPrice(airtel);
+        setTotalPrice(dialog + mobitel + hutch + airtel);
 
         console.log("Dialog:", dialog);
         console.log("Mobitel:", mobitel);
@@ -191,7 +193,7 @@ export default function ReloadDashboard() {
                             {/* Total - Very Compact */}
                             <div className="mt-2 pt-2 border-t border-gray-100 text-right">
                                 <span className="text-xs text-gray-500">Total: </span>
-                                <span className="text-sm font-bold text-gray-900">Rs. 7,200</span>
+                                <span className="text-sm font-bold text-gray-900">Rs.{totalPrice}</span>
                             </div>
                         </div>
                     </div>

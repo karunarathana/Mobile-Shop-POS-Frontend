@@ -1,6 +1,6 @@
 // let BACKEND_ENDPOINT = "https://orders-manage-production.up.railway.app/";
 let BACKEND_ENDPOINT = "http://localhost:8080/";
-let API_ROOT_ENDPOINT = "api/com-diyadahara";
+let API_ROOT_ENDPOINT = "api/com-mmbile-shop-pos/v1";
 
 const API_ENDPOINTS = {
     CREATE_CUSTOMER: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/create-customer",
@@ -48,7 +48,7 @@ const API_ENDPOINTS = {
 
     CREATE_REPAIR: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/create-repair-device",
     VIEW_ALL_SINGLE_CUSTOMER_REPAIRS: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/view-single-repair-device",
-
+    GENARATE_BILL: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/generate-bill",
 
 
 
