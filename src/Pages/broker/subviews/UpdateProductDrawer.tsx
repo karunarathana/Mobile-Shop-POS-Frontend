@@ -1,20 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { EditOutlined} from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
+import React, { useState } from 'react';
+import { EditOutlined } from '@ant-design/icons';
+import { Button, Col, Drawer, Form, Input, Row, Select, Space } from 'antd';
 import { showNotification } from '../components/Notification';
-import axios from 'axios';
+import { updateAccessoryProduct} from '../../../service/ManageAccessory.service';
+import { UpdateProductAccessoryDrawerProps } from '../../../model/BaseCreateProduct';
 
-interface DataType {
-    categoryId: number;
-    name: string;
-}
-
-const UpdateProductDrawer: React.FC<{foodName:string,foodPrice:number,cId:number,size:string,discountPercentage:number,foodId:number}> = (props) => {
+const UpdateProductDrawer: React.FC<UpdateProductAccessoryDrawerProps> = ({
+    productId,
+    accessoryId,
+    productName,
+    brand,
+    purchasePrice,
+    sellingPrice,
+    categoryId,
+    discountPercentage,
+    status,
+    color,
+    rackId,
+    type,
+    compatibleWith,
+    quantityInStock,
+    refreshTable
+}) => {
     const [open, setOpen] = useState(false);
-    const [openPotionIntput, setOprnPotionInput] = useState(true);
     const [form] = Form.useForm();
-    const [data, setData] = useState<DataType[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
 
     const showDrawer = () => {
         setOpen(true);
@@ -24,75 +33,47 @@ const UpdateProductDrawer: React.FC<{foodName:string,foodPrice:number,cId:number
         setOpen(false);
     };
 
-    const fetchData = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get('http://localhost:8080/api/com-diyadahara/view-all-category');
-            setData(response.data.data);
-        } catch (error) {
-            console.error('Failed to fetch category:', error);
-        } finally {
-            setLoading(false);
-            console.log(loading);
-            
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, [])
-
     const onFinish = async (values: any) => {
         console.log('Form Values:', values);
-        const productDto = {
-            "productId":props.foodId,
-            "foodName": values.foodName,
-            "foodPrice": values.foodPrice,
-            "categoryId":props.cId,
-            "size": values.size,
-            "sizeOfPotion": null,
-            "discountPercentage":values.discountPercentage | 0,
-            "updatedBy": "Anuja"
-        }
         try {
-            const response = await axios.post(
-                "http://localhost:8080/api/com-diyadahara/update-single-product",
-                productDto
-            );
-            console.log("**********************************")
-            console.log("API Call Started In UpdateProductDrawer");
-            console.log("**********************************")
-            console.log("API Response:", response.data);
-            console.log("API Call Finished In UpdateProductDrawer");
-            console.log("**********************************")
+            const AccessoryDto = {
+                productId: productId,
+                productName: values.name,
+                accessoryId: accessoryId,
+                purchasePrice: values.costPrice,
+                sellingPrice: values.sellPrice,
+                stock: values.quantity,
+                status: values.status,
+                discountPercentage: values.discountPercentage,
+                type: "Battery",
+                accessoryDto: {
+                    rackId: values.rackId,
+                    brand: values.brand,
+                    color: values.color,
+                    compatibleWith: values.compatibleWith,
+                    categoryId: 1,
+                    createBy: "admin",
+                },
+            };
+            console.log(AccessoryDto);
+            const response = await updateAccessoryProduct(AccessoryDto)
+            console.log("API Response ",response);
+            
 
-            if (response.data.msg === "Save Product Successfully" && response.data.statusCode === "201") {
+            if (response.data.msg === "Accessory Updated successfully" && response.data.statusCode === "200") {
                 showNotification(
                     "success",
-                    "Success",
-                    "Product created successfully!"
+                    "සාර්ථක පණිවිඩය",
+                    "උපාංගය සාර්ථකව යාවත්කාලීන කරනු ලදි!!"
                 );
-            }
-            if (response.data.statusCode === "400" && response.data.msg === "Already Product In System") {
-                showNotification(
-                    "error",
-                    "Error",
-                    "Product already exists!"
-                );
-            }
-            if (response.data.statusCode === "500") {
-                showNotification(
-                    "error",
-                    "Error",
-                    "Please Change the email and phone number!"
-                );
+                refreshTable();
             }
         } catch (error: any) {
             console.error("API Error:", error);
             showNotification(
                 "error",
-                "Error",
-                error.response?.data?.message || "Something went wrong!"
+                "දෝශ පණිවිඩය",
+                error.response?.data?.message || "පද්ධතියේ දෝශයක් ඇත!"
             );
         }
         form.resetFields();
@@ -101,11 +82,11 @@ const UpdateProductDrawer: React.FC<{foodName:string,foodPrice:number,cId:number
 
     return (
         <>
-           <a onClick={showDrawer}>
+            <a onClick={showDrawer}>
                 <EditOutlined style={{ color: '#1890ff', fontSize: '18px', cursor: 'pointer' }} />
             </a>
             <Drawer
-                title="Update product"
+                title="උපාංග යාවත්කාලීන (Update) කිර්‍රිම."
                 size={720}
                 onClose={onClose}
                 open={open}
@@ -121,200 +102,161 @@ const UpdateProductDrawer: React.FC<{foodName:string,foodPrice:number,cId:number
                 }
             >
                 <Form layout="vertical" requiredMark={true} onFinish={onFinish}
-                 initialValues={{
-                        foodName: props.foodName,
-                        foodPrice: props.foodPrice,
-                        categoryId: props.cId,
-                        discountPercentage: props.discountPercentage,
-                        size:props.size
-
+                    initialValues={{
+                        productId: productId,
+                        categoryId: categoryId,
+                        name: productName,
+                        status: status,
+                        brand: brand,
+                        discountPercentage: discountPercentage,
+                        color: color,
+                        rackId: rackId,
+                        compatibleWith: compatibleWith,
+                        costPrice: purchasePrice,
+                        sellPrice: sellingPrice,
+                        quantity: quantityInStock,
+                        type: type
                     }}
                 >
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="foodName"
-                                label="Food Name"
-                                rules={[{ required: true, message: 'Please enter Food Name' }]}
-                            >
-                                <Input placeholder="Please enter Food Name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="foodPrice"
-                                label="Food Price"
-                                rules={[{ required: true, message: 'Please enter Food Price' }]}
-                            >
-                                <Input placeholder="Please enter Food Price" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="categoryId"
-                                label="Category Name"
-                                rules={[{ required: true, message: 'Please select Category Name' }]}
-                            >
-                                <Select
-                                    placeholder="Select category"
-                                    options={data.map((category: DataType) => ({
-                                        label: category.name,
-                                        value: category.categoryId,
-                                    }))}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="type"
-                                label="Potion Type"
-                                rules={[{ required: true, message: 'Please choose the Potion Type' }]}
-                            >
-                                <Select
-                                    placeholder="Please choose the Potion Type"
-                                    onChange={(value: boolean) => {
-                                        value === false
-                                            ? setOprnPotionInput(value)
-                                            : setOprnPotionInput(value);
-                                    }}
-                                    options={[
-                                        { label: 'Single Potion', value: true },
-                                        { label: 'Special Potion', value: false },
-                                    ]}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="discountPercentage"
-                                label="Discount Percentage %"
-                            >
-                                <Input placeholder="Please enter Discount Percentage" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="dateTime"
-                                label="Valid Time Period"
-                            >
-                                <DatePicker.RangePicker
-                                    style={{ width: '100%' }}
-                                    getPopupContainer={(trigger) => trigger.parentElement!}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="size"
-                                label="Size"
-                                rules={[{ required: true, message: 'Please select Size' }]}
-                            >
-                                <Select
-                                    placeholder="Please select Size"
-                                    options={[
-                                        { label: 'Small', value: 'Small' },
-                                        { label: 'Meadium', value: 'Meadium' },
-                                        { label: 'Large', value: 'Large' },
-                                        { label: 'Special', value: 'Special' },
-                                        { label: 'Others', value: 'Others' },
-                                    ]}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <div className={`${(openPotionIntput) ? "hidden" : ""}`}>
-                        <h3 className='mb-2 text-black text-[1.5rem] font-semibold'>Added Potion</h3>
+                    <div>
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item
-                                    name="small"
-                                    label="Small Potion"
-                                    rules={[{ required: !openPotionIntput, message: 'Please enter user name' }]}
+                                    name="name"
+                                    label="උපාංග නාමය"
+                                    rules={[{ required: true }]}
                                 >
-                                    <Input placeholder="Please enter user name" />
+                                    <Input />
                                 </Form.Item>
                             </Col>
+
                             <Col span={12}>
                                 <Form.Item
-                                    name="smallPrice"
-                                    label="price Of Small potion"
-                                    rules={[{ required: !openPotionIntput, message: 'Please enter user name' }]}
+                                    name="status"
+                                    label="උපාංග තත්වය"
+                                    rules={[{ required: true }]}
                                 >
-                                    <Input placeholder="Please enter user name" />
+                                    <Select
+                                        options={[
+                                            { value: "ACTIVE", label: "ACTIVE" },
+                                            { value: "INACTIVE", label: "INACTIVE" }
+                                        ]}
+                                    />
                                 </Form.Item>
                             </Col>
                         </Row>
+
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item
-                                    name="medium"
-                                    label="Medium Potion"
-                                    rules={[{ required: !openPotionIntput, message: 'Please enter user name' }]}
+                                    name="brand"
+                                    label="Brand"
+                                    rules={[{ required: true }]}
                                 >
-                                    <Input placeholder="Please enter user name" />
+                                    <Input />
                                 </Form.Item>
                             </Col>
+
                             <Col span={12}>
                                 <Form.Item
-                                    name="mediumPrice"
-                                    label="Price of medium potion"
-                                    rules={[{ required: !openPotionIntput, message: 'Please enter user name' }]}
+                                    name="rackId"
+                                    label="Rack ID"
+                                    rules={[{ required: true }]}
                                 >
-                                    <Input placeholder="Please enter user name" />
+                                    <Input />
                                 </Form.Item>
                             </Col>
                         </Row>
+
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item
-                                    name="large"
-                                    label="Large Potion"
-                                    rules={[{ required: !openPotionIntput, message: 'Please enter user name' }]}
+                                    name="type"
+                                    label="Accessory Type"
+                                    rules={[{ required: true }]}
                                 >
-                                    <Input placeholder="Please enter user name" />
+                                    <Input />
                                 </Form.Item>
                             </Col>
+
                             <Col span={12}>
                                 <Form.Item
-                                    name="largePrice"
-                                    label="Price of large potion"
-                                    rules={[{ required: !openPotionIntput, message: 'Please enter user name' }]}
+                                    name="compatibleWith"
+                                    label="Compatible With"
                                 >
-                                    <Input placeholder="Please enter user name" />
+                                    <Input />
                                 </Form.Item>
                             </Col>
                         </Row>
+
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item
-                                    name="special"
-                                    label="Special Potion"
-                                    rules={[{ required: !openPotionIntput, message: 'Please enter user name' }]}
+                                    name="costPrice"
+                                    label="උපාංගයේ ලබාගත් මිල(Purchase price)"
+                                    rules={[{ required: true, message: 'කරුණාකර උපාංගයේ ලබාගත් මිල ඇතුලත් කරන්න' }]}
                                 >
-                                    <Input placeholder="Please enter user name" />
+                                    <Input type={"number"} placeholder="කරුණාකර උපාංගයේ ලබාගත් මිල සදහන් කරන්න" />
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                                <Form.Item
+                                    name="sellPrice"
+                                    label="උපාංගයේ විකුණුම් මිල(Sell price)"
+                                    rules={[{ required: true, message: 'කරුණාකර උපාංගයේ විකුණුම් මිල ඇතුලත් කරන්න' }]}
+                                >
+                                    <Input type={"number"} placeholder="කරුණාකර උපාංගයේ විකුණුම් මිල සදහන් කරන්න" />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="categoryId"
+                                    label="Category ID"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input type="number" />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
                                 <Form.Item
-                                    name="specialPrice"
-                                    label="Price of special potion"
-                                    rules={[{ required: !openPotionIntput, message: 'Please enter user name' }]}
+                                    name="quantity"
+                                    label="උපාංගයේ ගණන (Stock)"
+                                    rules={[{ required: true, message: 'කරුණාකර උපාංගයේ ගණන ඇතුලත් කරන්න' }]}
                                 >
-                                    <Input placeholder="Please enter user name" />
+                                    <Input type={"number"} placeholder="කරුණාකර උපාංගයේ ගණන සදහන් කරන්න" />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="discountPercentage"
+                                    label="Discount Percentage"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input type="number" />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="color"
+                                    label="Color"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input type="text" />
                                 </Form.Item>
                             </Col>
                         </Row>
                     </div>
                     <Row gutter={16}>
                         <Form.Item label={null}>
-                            <Button className='mt-4 bg-slate-900 w-[210px]' type="primary" htmlType="submit">
-                                Create
+                            <Button className='mt-4 w-[210px]' type="primary" htmlType="submit">
+                                Update Accessory
                             </Button>
                         </Form.Item>
                     </Row>

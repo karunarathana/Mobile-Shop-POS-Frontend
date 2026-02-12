@@ -3,9 +3,7 @@ import { Table, Space } from 'antd';
 import type { TableProps } from 'antd';
 import UpdateCategoryDrawer from '../subviews/UpdateCategoryDrawer';
 import ConfirmDelete from '../components/Confirmation';
-import axios from 'axios';
 import { showNotification } from '../components/Notification';
-import API_ENDPOINTS from '../../../constant/backend-endpoints';
 import { deleteCategory } from '../../../service/CreateCategory.service';
 
 interface DataType {
@@ -53,7 +51,7 @@ const CategoryTable: React.FC<CustomerTableProps> = ({
         },
     ];
 
-    return <Table<DataType> columns={columns} dataSource={tableData} loading={loadingData} scroll={{ y: '40vh' }} />;
+    return <Table<DataType> rowKey="categoryId" columns={columns} dataSource={tableData} loading={loadingData} scroll={{ y: '40vh' }} />;
 };
 
 export default CategoryTable;

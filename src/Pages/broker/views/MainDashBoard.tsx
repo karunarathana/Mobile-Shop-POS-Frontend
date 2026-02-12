@@ -5,42 +5,48 @@ import {
     Users,
     DollarSign,
     TrendingUp,
+    TrendingDown,
     Package,
     Clock,
     CheckCircle,
     AlertCircle
 } from 'lucide-react';
-import axios from "axios";
-import API_ENDPOINTS from "../../../constant/backend-endpoints";
+import ConfirmDelete from "../components/Confirmation";
+import { deleteExpenses, viewAllTodayExpenses } from "../../../service/ManageExpenses.service";
+import { ExpensesResponseType } from "../../../model/BaseExpensesResponse";
+import { callDashBoard } from "../../../service/DashBoard.service";
+import { DatePicker } from "antd";
+import { showNotification } from "../components/Notification";
 
 function MainDashBoard() {
     const [loadBar, setLoadBar] = useState(true);
     const [stats, setStats] = useState({
-        totalOrders: 156,
-        completedOrders: 128,
-        pendingOrders: 28,
-        totalRevenue: 245800,
-        activeCustomers: 42,
-        todayOrders: 18
+        totalOrders: 0,
+        completedOrders: 0,
+        totalRevenue: 0,
+        activeCustomers: 0,
+        totalExpensive: 0
     });
+    const [expenses, setExpenses] = useState<ExpensesResponseType[]>([]
+    );
 
     // Fetch data from backend
     const fetchData = async () => {
         try {
-            const response = await axios.get(
-                API_ENDPOINTS.ALL_DASHBOARD_DETIALS
-            );
-            const statsObj = {
-                totalOrders: response.data.allProduct,
-                completedOrders: response.data.completedOrders,
-                pendingOrders: response.data.pendingOrders,
-                totalRevenue: response.data.totalRevenue,
-                activeCustomers: response.data.activeCustomers,
-                todayOrders: response.data.todayOrders,
+            const response = await callDashBoard();
+            const expensesResponse = await viewAllTodayExpenses();
+            setStats(response);
+            setExpenses(expensesResponse.data.data)
+        } catch (error: any) {
+            if (error.message === "Network Error") {
+                showNotification(
+                    "error",
+                    "දෝෂයක් (Error)",
+                    "කරුණාකර ඔබගේ අන්තර්ජාල සම්බන්ධතාවය පරීක්ෂා කරන්න."
+                );
+            } else {
+                console.error('Failed to fetch customers:', error);
             }
-            setStats(statsObj);
-        } catch (error) {
-            console.error('Failed to fetch customers:', error);
         }
     };
 
@@ -75,17 +81,23 @@ function MainDashBoard() {
         </div>
     );
 
-    const OrderStatusCard = ({ status, count, color, icon: Icon }: any) => (
-        <div className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-            <div className={`p-3 rounded-lg ${color} bg-opacity-10 mr-4 rounded-full bg-blue-600`}>
-                <Icon className={`h-5 w-5 ${color}`} />
-            </div>
-            <div>
-                <p className="text-sm text-gray-500">{status}</p>
-                <p className="text-xl font-bold text-gray-800">{count}</p>
-            </div>
-        </div>
-    );
+    // const OrderStatusCard = ({ status, count, color, icon: Icon }: any) => (
+    //     <div className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+    //         <div className={`p-3 rounded-lg ${color} bg-opacity-10 mr-4 rounded-full bg-blue-600`}>
+    //             <Icon className={`h-5 w-5 ${color}`} />
+    //         </div>
+    //         <div>
+    //             <p className="text-sm text-gray-500">{status}</p>
+    //             <p className="text-xl font-bold text-gray-800">{count}</p>
+    //         </div>
+    //     </div>
+    // );
+
+    async function handleDelete(eId: number): Promise<void> {
+        await deleteExpenses(eId);
+        const expensesResponse = await viewAllTodayExpenses();
+        setExpenses(expensesResponse.data.data)
+    }
 
     return (
         <div>
@@ -94,13 +106,17 @@ function MainDashBoard() {
             </div>
 
             <div className={loadBar ? 'hidden' : 'p-6 max-h-[78vh] overflow-y-auto'}>
+                {/* <LoginModal showLogin={true} /> */}
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between bg-white rounded-2xl p-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">
-                                Good {greeting}, MMobile වෙත සාදරයෙන් පිළිගනිමු. 👋
+                            <h1 className="text-[2rem] font-bold text-gray-900">
+                                Good {greeting},
                             </h1>
+                            <h2 className="text-[1.7rem] font-bold text-gray-900">
+                                මශීෂ Mobile වෙත සාදරයෙන් පිළිගනිමු. 👋
+                            </h2>
                             <p className="text-gray-600 mt-2">
                                 Here's what's happening with your orders today.
                             </p>
@@ -118,7 +134,6 @@ function MainDashBoard() {
                         </div>
                     </div>
                 </div>
-
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <StatCard
@@ -143,8 +158,14 @@ function MainDashBoard() {
                         trend="+5%"
                     />
                     <StatCard
-                        title="Today's Orders"
-                        value={stats.todayOrders}
+                        title="Today's Expensive"
+                        value={`Rs. ${stats.totalExpensive.toLocaleString()}`}
+                        icon={TrendingDown}
+                        color="text-orange-600"
+                    />
+                    <StatCard
+                        title="Today's Repairs"
+                        value={stats.completedOrders}
                         icon={TrendingUp}
                         color="text-orange-600"
                     />
@@ -156,25 +177,35 @@ function MainDashBoard() {
                     <div className="lg:col-span-2">
                         {/* Recent Activity */}
                         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                            <h2 className="text-xl font-bold text-gray-900 mb-6">Recent Activity</h2>
+                            <div className="flex justify-between items-center mb-2">
+                                <h2 className="text-[1.8rem] font-bold text-gray-900">දවසේ වියදම්</h2>
+                                <DatePicker size="middle" placeholder='දවස තෝරන්න' onChange={(date, dateString) => {
+                                    console.log(date);
+                                    console.log(dateString);
+                                    
+                                    
+                                }} />
+                            </div>
                             <div className="space-y-4">
-                                {[
-                                    { time: "10:30 AM", action: "New order #1025 received", status: "success" },
-                                    { time: "09:45 AM", action: "Order #1024 completed", status: "success" },
-                                    { time: "09:15 AM", action: "Payment received for order #1023", status: "success" },
-                                    { time: "08:30 AM", action: "New customer registration", status: "info" },
-                                ].map((activity, index) => (
-                                    <div key={index} className="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
-                                        <div className={`p-2 rounded-full mr-4 ${activity.status === 'success' ? 'bg-green-100' : 'bg-blue-100'
+                                {expenses.map((activity, index) => (
+                                    <div key={index} className="flex items-center p-3 border border-gray-100 hover:bg-blue-200 rounded-lg transition-colors">
+                                        <div className={`p-2 rounded-full mr-4 ${true ? 'bg-green-100' : 'bg-blue-100'
                                             }`}>
-                                            {activity.status === 'success' ?
+                                            {true ?
                                                 <CheckCircle className="h-5 w-5 text-green-600" /> :
                                                 <AlertCircle className="h-5 w-5 text-blue-600" />
                                             }
                                         </div>
                                         <div className="flex-1">
-                                            <p className="font-medium text-gray-800">{activity.action}</p>
-                                            <p className="text-sm text-gray-500">{activity.time}</p>
+                                            <p className="font-medium text-gray-800">{activity.description}</p>
+                                            <p className="text-sm text-gray-500">{activity.createdAt}</p>
+                                            <p className="text-lg text-red-700">Rs.{activity.price}</p>
+                                        </div>
+                                        <div className="p-3 bg-opacity-10 mr-4 rounded-full bg-blue-600">
+                                            <ConfirmDelete
+                                                onConfirm={() => handleDelete(activity.expensesId)}
+                                                onCancel={() => console.log("Cancelled delete for", activity.expensesId)}
+                                            />
                                         </div>
                                     </div>
                                 ))}
@@ -183,8 +214,7 @@ function MainDashBoard() {
                     </div>
 
                     {/* Right Column - Order Status */}
-                    <div className="space-y-6">
-                        {/* Order Status */}
+                    {/* <div className="space-y-6">
                         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                             <h2 className="text-xl font-bold text-gray-900 mb-6">Order Status</h2>
                             <div className="space-y-4">
@@ -208,7 +238,7 @@ function MainDashBoard() {
                                 />
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Bottom Section */}

@@ -76,3 +76,29 @@ export const updateCustomer = async (
     throw error;
   }
 };
+
+export const getSingleCustomer = async (
+  phoneNumber: string
+): Promise<AxiosResponse<CreateCustomerResponse>> => {
+  try {
+    const response = await axios.get<CreateCustomerResponse>(
+      API_ENDPOINTS.VIEW_SINGLE_CUSTOMER,{
+        params: {
+          customerId: phoneNumber,
+        },
+      }
+    );
+
+    console.log("**********************************");
+    console.log("API Call Started In VIEW_SINGLE_CUSTOMER");
+    console.log("**********************************");
+    console.log("API Response:", response.data);
+    console.log("API Call Finished In VIEW_SINGLE_CUSTOMER");
+    console.log("**********************************");
+
+    return response;
+  } catch (error: any) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};

@@ -2,10 +2,10 @@ import React from 'react';
 import { Table, Space, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import ConfirmDelete from '../components/Confirmation';
+import UpdateProductDrawer from '../subviews/UpdateProductDrawer';
 import { ProductType } from '../../../model/BaseCreateProduct';
 import { deleteProduct } from '../../../service/ManageAccessory.service';
 import { showNotification } from '../components/Notification';
-import UpdatePhoneDrawer from '../subviews/UpdatePhoneDrawer';
 
 interface CustomerTableProps {
     tableData: ProductType[];
@@ -35,7 +35,7 @@ async function handleDelete(key: number, refreshTable: () => void) {
     }
 }
 
-const ProductTable: React.FC<CustomerTableProps> = ({
+const AccessoryTable: React.FC<CustomerTableProps> = ({
     tableData,
     loadingData,
     refreshTable
@@ -49,82 +49,59 @@ const ProductTable: React.FC<CustomerTableProps> = ({
             width: 80
         },
         {
-            title: "Product",
+            title: "Accessory",
             dataIndex: "productName",
             key: "productName"
         },
         {
             title: "Brand",
-            dataIndex: ["phone", "brand"],
+            dataIndex: ["accessoryId", "brand"],
             key: "brand"
         },
         {
-            title: "Model",
-            dataIndex: ["phone", "model"],
-            key: "model"
+            title: "Rack",
+            dataIndex: ["accessoryId", "rackId"],
+            key: "rackId"
         },
         {
-            title: "IMEI",
-            dataIndex: ["phone", "imeiNumber"],
-            key: "imeiNumber"
+            title: "Type",
+            dataIndex: "type",
+            key: "type"
         },
         {
-            title: "Color",
-            dataIndex: ["phone", "color"],
-            key: "color"
+            title: "Compatible With",
+            dataIndex: ["accessoryId", "compatibleWith"],
+            key: "compatibleWith",
+            render: (value) => value || "-"
         },
         {
-            title: "Storage",
-            dataIndex: ["phone", "storageCapacity"],
-            key: "storageCapacity"
-        },
-        {
-            title: "Condition",
-            dataIndex: ["phone", "condition"],
-            key: "condition",
-            render: (condition) => (
-                <Tag color={condition === "NEW" ? "green" : "orange"}>
-                    {condition}
-                </Tag>
-            )
-        },
-        {
-            title: "Purchase (Rs)",
+            title: "Cost Price",
             dataIndex: "purchasePrice",
-            key: "purchasePrice"
+            key: "purchasePrice",
+            render: (price) => `Rs. ${price}`
         },
         {
-            title: "Selling (Rs)",
+            title: "Sell Price",
             dataIndex: "sellingPrice",
-            key: "sellingPrice"
+            key: "sellingPrice",
+            render: (price) => `Rs. ${price}`
         },
         {
-            title: "Stock",
+            title: "Qty",
             dataIndex: "stock",
             key: "stock",
             render: (qty) => (
-                <Tag color={qty > 3 ? "blue" : "red"}>
+                <Tag color={qty > 0 ? "blue" : "red"}>
                     {qty}
                 </Tag>
             )
-        },
-        {
-            title: "Discount %",
-            dataIndex: "discountPercentage",
-            key: "discountPercentage",
-            render: (d) => d ? `${d}%` : "-"
-        },
-        {
-            title: "Category",
-            dataIndex: ["phone", "categoryId", "name"],
-            key: "name"
         },
         {
             title: "Status",
             dataIndex: "status",
             key: "status",
             render: (status) => (
-                <Tag color={status === "ACTIVE" ? "green" : "red"}>
+                <Tag color={status === "ACTIVE" ? "green" : "volcano"}>
                     {status}
                 </Tag>
             )
@@ -139,25 +116,22 @@ const ProductTable: React.FC<CustomerTableProps> = ({
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <UpdatePhoneDrawer
+                    <UpdateProductDrawer
                         productId={record.productId}
-                        phoneId={record.phone?.phoneId}
+                        accessoryId = {record.accessoryId?.accessoryId}
                         productName={record.productName}
+                        brand={record.accessoryId?.brand}
+                        rackId={record.accessoryId?.rackId}
+                        type={record.type}
+                        compatibleWith={record.accessoryId?.compatibleWith}
                         purchasePrice={record.purchasePrice}
                         sellingPrice={record.sellingPrice}
+                        categoryId={record.accessoryId?.categoryId.categoryId}
                         discountPercentage={record.discountPercentage}
                         status={record.status}
+                        color={record.accessoryId?.color}
                         quantityInStock={record.stock}
                         refreshTable={refreshTable}
-
-                        /* Phone specific */
-                        condition={record.phone?.condition}
-                        brand={record.phone?.brand}
-                        model={record.phone?.model}
-                        imeiNumber={record.phone?.imeiNumber}
-                        color={record.phone?.color}
-                        storageCapacity={record.phone?.storageCapacity}
-                        categoryId={record.phone?.categoryId?.categoryId}
                     />
                     <ConfirmDelete
                         onConfirm={() => handleDelete(record.productId, refreshTable)}
@@ -171,5 +145,5 @@ const ProductTable: React.FC<CustomerTableProps> = ({
     return <Table<ProductType> rowKey="productId" columns={columns} dataSource={tableData} loading={loadingData} scroll={{ y: '40vh', x: 'max-content' }} />;
 };
 
-export default ProductTable;
+export default AccessoryTable;
 

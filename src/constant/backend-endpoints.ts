@@ -1,6 +1,6 @@
 // let BACKEND_ENDPOINT = "https://orders-manage-production.up.railway.app/";
 let BACKEND_ENDPOINT = "http://localhost:8080/";
-let API_ROOT_ENDPOINT = "api/com-diyadahara";
+let API_ROOT_ENDPOINT = "api/com-mmbile-shop-pos/v1";
 
 const API_ENDPOINTS = {
     CREATE_CUSTOMER: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/create-customer",
@@ -13,13 +13,19 @@ const API_ENDPOINTS = {
     DELTE_CATEGORY: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/delete-category-by-id",
     UPDATE_CATEGORY: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/update-category-by-id",
     CREATE_CATEGORY: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/create-category",
-    GET_ALL_PRODUCT_SINGLE_CATEGORY: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/get-all-product-by-category",
+    GET_ALL_PRODUCT_SINGLE_CATEGORY: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/view-single-product-by-type",
 
     CREATE_ORDER: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/create-order",
     VIEWS_ORDER_SINGLE_CUSTOMER: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/view-order-relevant-customer",
 
     VIEW_ALL_PRODUCT: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/view-all-product",
+    GET_ALL_ACCESSORY: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/get-all-accessory",
+    
     CREATE_PRODUCT: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/create-product",
+    CREATE_ACCESSORY_PRODUCT: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/create-accessory",
+    UPDATE_ACCESSORY_PRODUCT: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/update-accessory-product",
+    UPDATE_PHONE_PRODUCT: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/update-phone-product",
+    DELTE_PRODUCT: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/delete-single-product",
 
 
     ALL_DASHBOARD_DETIALS: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/get-dashboard-details",
@@ -30,6 +36,19 @@ const API_ENDPOINTS = {
     VIEW_ALL_PREVIOUS_RELOAD: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/view-all-reload-by-date",
     UPDATE_RELOAD: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/update-single-reload",
 
+
+    CREATE_EXPENSES: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/create-expenses",
+    DELTE_EXPENSES: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/delete-single-expenses",
+    UPDATE_EXPENSES: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/update-single-expenses",
+    VIEWALL_EXPENSES: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/view-all-expenses",
+    VIEW_ALL_PREVIOUSE_EXPENSES: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/view-all-expenses-by-date",
+
+    CREATE_SALE: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/create-sale",
+    VIEW_ALL_SALE_ITEMS: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/view-all-sale",
+
+    CREATE_REPAIR: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/create-repair-device",
+    VIEW_ALL_SINGLE_CUSTOMER_REPAIRS: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/view-single-repair-device",
+    GENARATE_BILL: BACKEND_ENDPOINT + API_ROOT_ENDPOINT + "/generate-bill",
 
 
 
